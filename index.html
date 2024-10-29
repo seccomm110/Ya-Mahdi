@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Webpage</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        .left {
+            width: 80%;
+            height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            flex-direction: column;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .left::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: -50px;
+            bottom: 0;
+            width: 100px;
+            background: inherit;
+            transform: skewX(-20deg);
+            z-index: 1;
+        }
+
+        .right {
+            width: 20%;
+            height: 100vh;
+            background-size: cover;
+            position: relative;
+            z-index: 0;
+            border-left: 2px #333 solid;
+        }
+
+        .left h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            z-index: 2;
+        }
+
+        .ayat-container, .quote-container {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            margin: 15px 0;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .ayat-container h2, .quote-container h2 {
+            font-family: 'Lalezar', cursive;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #00796b;
+        }
+
+        .ayat-container p, .quote-container p {
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .translation {
+            font-size: 1rem;
+            color: #555;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        @media (min-width: 1024px) {
+            .left h1 {
+                font-size: 4rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .left, .right {
+                width: 100%;
+                height: 50vh;
+            }
+            .left h1 {
+                font-size: 2rem;
+            }
+        }
+        
+    </style>
+    
+</head>
+<body>
+    
+    <div class="left">
+        <div id="navbar-placeholder"></div>
+        <h1>Secondary Committee</h1>
+        
+        <!-- Qur'anic Ayat Section -->
+        <div class="ayat-container" id="ayat">
+            <h2>Qur'anic Ayat</h2>
+            <p id="ayatText">بَقِيَّتُ اللَّـهِ خَيْرٌ لَّكُمْ إِن كُنتُم مُّؤْمِنِينَ</p>
+            <p id="translationText" class="translation">"What remains with Allah is best for you, if you would be believers." (Hud 11:86)</p>
+        </div>
+        
+        <!-- Quote Section -->
+        <div class="quote-container" id="quote">
+            <h2>Hadiths</h2>
+            <p id="quoteText"></p>
+            <br>
+            <p id="quoteReference" class="translation"></p>
+        </div>
+    </div>
+  
+    <div class="right" id="rightSection"></div> <!-- Give an ID to access it in JavaScript -->
+
+    <script>
+        const quotes = [
+            {
+                quote: "Imam Sadiq (a.s.): “One of you who dies awaiting for Imam Mahdi (a.s.) dies as if he was with him in his tent.”",
+                reference: "Ref: Kamaluddin, Vol. 2, Pg. 644, Chapter 55, Tr. No. 1"
+            },
+            {
+                quote: "Imam Sadiq (a.s.) from his forefathers from Amirul Momineen (a.s.) that he said: “One who awaits for the reappearance of our Qaim is like one who rolls in his blood in the path of Allah.”",
+                reference: "Ref: Kamaluddin, Vol. 2, Pg. 645, Chapter 55, Tr. No. 6"
+            },
+            {
+                quote: "Imam Sadiq (a.s.): “Fortunate are the Shias of our Qaim who during the period of his occultation wait for his reappearance and who obey him during the period of his reappearance. They are Awliya of Allah for whom there shall be neither fear nor grief.”",
+                reference: "Ref: Kamaluddin, Vol. 2, Pg. 357, Chapter 33, Tr. No. 54"
+            },
+            {
+                quote: "Imam Sajjad (a.s.): “Awaiting for the reappearance is the best worship act.”",
+                reference: "Ref: Kamaluddin, Vol. 1, Pg. 320, Chapter 31, Tr. No. 2"
+            },
+            {
+                quote: "Imam Sadiq (a.s.): “One who dies awaiting for the reappearance is like one who is with the Qaim in his tent, rather he is like one who fights the holy war under the command of the Messenger of Allah (s.a.w.a.).”",
+                reference: "Ref: Kamaluddin, Vol. 2, Pg. 338, Tr. No. 11"
+            }
+        ];
+
+        const ayat = [
+            {
+                arabic: "بَقِيَّتُ اللَّـهِ خَيْرٌ لَّكُمْ إِن كُنتُم مُّؤْمِنِينَ",
+                translation: "What remains with Allah is best for you, if you would be believers. (Hud 11:86)"
+            },
+            {
+                arabic: "فَاذْكُرُونِي أَذْكُرْكُمْ",
+                translation: "So remember Me; I will remember you. (Al-Baqarah 2:152)"
+            },
+            {
+                arabic: "وَلَا تَكُونُوا كَالَّذِينَ نَسُوا اللَّهَ",
+                translation: "And be not like those who forgot Allah. (Al-Hashr 59:19)"
+            },
+            {
+                arabic: "إِنَّ مَعَ الْعُسْرِ يُسْرًا",
+                translation: "Indeed, with hardship comes ease. (Ash-Sharh 94:6)"
+            }
+        ];
+
+        // Array of image URLs
+        const images = [
+        'imgs/img2.jpg',
+        'imgs/img4.jpg',
+        'imgs/img5.jpg',
+        'imgs/img6.jpg',
+        ];
+
+        // Function to set a random background image
+        function setRandomBackground() {
+            const rightSection = document.getElementById('rightSection');
+            const randomIndex = Math.floor(Math.random() * images.length);
+            rightSection.style.backgroundImage = `url('${images[randomIndex]}')`;
+        }
+
+        function displayContent() {
+            const quoteElement = document.getElementById('quoteText');
+            const quoteReferenceElement = document.getElementById('quoteReference');
+            const ayatElement = document.getElementById('ayatText');
+            const translationElement = document.getElementById('translationText');
+
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            const randomAyat = ayat[Math.floor(Math.random() * ayat.length)];
+
+            quoteElement.textContent = randomQuote.quote;  // Display the quote
+            quoteReferenceElement.textContent = randomQuote.reference; // Display the reference
+            ayatElement.textContent = randomAyat.arabic;
+            translationElement.textContent = randomAyat.translation;
+        }
+
+        // Call functions on page load
+        setRandomBackground();
+        displayContent();
+    </script>
+    <script src="loadNavbar.js"></script>
+
+</body>
+</html>

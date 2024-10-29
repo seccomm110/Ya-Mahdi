@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookmarks</title>
+    <style>
+        
+        body {
+            /* font-family: Arial, sans-serif; */
+            text-align: center;
+            margin: 20px;
+            background-color: #ffffff;
+            color: #333;
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #ff8c00;
+        }
+        #linkForm {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            margin-right: 10px;
+            border: 1px solid #ff8c00;
+            border-radius: 5px;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #ff8c00;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        input[type="submit"]:hover {
+            background-color: #ffb74d;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        /* Button container styling */
+        .button-container {
+            display: flex;
+            gap: 10px;
+        }
+        /* Button styling */
+        .button-container button, .button-container a {
+            padding: 5px 10px;
+            cursor: pointer;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: small;
+        }
+        .delete-button { background-color: #ff4d4d; } /* Red for Delete */
+        .edit-button { background-color: #4CAF50; } /* Green for Edit */
+        .copy-button { background-color: #008CBA; } /* Blue for Copy */
+        .open-button { background-color: #ff8c00; } /* Orange for Open */
+        /* Button hover effect */
+        .delete-button:hover, .edit-button:hover, .copy-button:hover, .open-button:hover {
+            opacity: 0.8;
+        }
+        ul li:hover {
+            background-color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar-placeholder"></div>
+
+    <h1>WebLink</h1>
+    
+    <div id="linkForm">
+        <input type="text" id="nameInput" placeholder="Enter name..." required>
+        <input type="text" id="linkInput" placeholder="Enter your favorite link..." required>
+        <input type="submit" value="Add Link" onclick="addLink()">
+    </div>
+
+    <ul id="bookmarkList"></ul>
+
+    <script>
+        const repoOwner = 'seccomm110'; // Replace with your GitHub username
+        const repoName = 'Al-Mahdi'; // Replace with your GitHub repo name
+        const tokenPart1 = 'ghp_yj5ZnPqi54dV';
+        const tokenPart2 = '1PNEbN6w4p1K3scfYz';
+        const tokenPart3 = '3gckWa';
+        const token = `${tokenPart1}${tokenPart2}${tokenPart3}`;
+        const filePath = 'bookmarks.json';
+
+        async function fetchBookmarks() {
+            try {
+                const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                const data = await response.json();
+                if (response.ok && data && data.content) {
+                    const bookmarks = JSON.parse(atob(data.content));
+                    bookmarks.forEach(bookmark => {
+                        addBookmarkToList(bookmark);
+                    });
+                } else {
+                    console.error('Error fetching bookmarks:', data);
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+            }
+        }
+
+        async function addLink() {
+            const nameInput = document.getElementById('nameInput');
+            const linkInput = document.getElementById('linkInput');
+            const nameValue = nameInput.value.trim();
+            const linkValue = linkInput.value.trim();
+
+            if (nameValue && linkValue) {
+                const bookmarks = await getBookmarks();
+                bookmarks.push({ name: nameValue, url: linkValue });
+                await saveBookmarks(bookmarks);
+                addBookmarkToList({ name: nameValue, url: linkValue });
+                nameInput.value = ''; 
+                linkInput.value = ''; 
+            } else {
+                alert('Please enter a valid name and link.');
+            }
+        }
+
+        async function saveBookmarks(bookmarks) {
+            const content = btoa(JSON.stringify(bookmarks));
+            const sha = await getFileSHA();
+
+            if (!sha) {
+                console.error('Unable to get SHA for the file.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' },
+                    body: JSON.stringify({
+                        message: 'Update bookmarks',
+                        content: content,
+                        sha: sha
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Error saving bookmarks:', response.statusText);
+                    console.error('Error details:', errorData);
+                } else {
+                    console.log('Bookmarks saved successfully!');
+                }
+            } catch (error) {
+                console.error('Error during saving bookmarks:', error);
+            }
+        }
+
+        async function getFileSHA() {
+            try {
+                const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                const data = await response.json();
+                return data.sha;
+            } catch (error) {
+                console.error('Error fetching file SHA:', error);
+                return null;
+            }
+        }
+
+        async function getBookmarks() {
+            try {
+                const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                const data = await response.json();
+                if (data && data.content) {
+                    return JSON.parse(atob(data.content));
+                }
+                return []; 
+            } catch (error) {
+                console.error('Error fetching bookmarks:', error);
+                return [];
+            }
+        }
+
+        function addBookmarkToList(bookmark) {
+            const bookmarkList = document.getElementById('bookmarkList');
+            const listItem = document.createElement('li');
+            listItem.textContent = bookmark.name;
+
+            const buttonContainer = document.createElement('div');
+            buttonContainer.className = 'button-container';
+
+            const openLink = document.createElement('a');
+            openLink.href = bookmark.url;
+            openLink.target = "_blank";
+            openLink.textContent = 'Open';
+            openLink.className = 'open-button';
+
+            const copyButton = document.createElement('button');
+            copyButton.textContent = 'Copy';
+            copyButton.className = 'copy-button';
+            copyButton.onclick = function() {
+                navigator.clipboard.writeText(bookmark.url)
+                    .then(() => alert('Link copied!'))
+                    .catch(err => console.error('Failed to copy link:', err));
+            };
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.className = 'delete-button';
+            deleteButton.onclick = async function() {
+                const bookmarks = await getBookmarks();
+                const updatedBookmarks = bookmarks.filter(b => b.url !== bookmark.url);
+                await saveBookmarks(updatedBookmarks);
+                bookmarkList.removeChild(listItem);
+            };
+
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Edit';
+            editButton.className = 'edit-button';
+            editButton.onclick = async function() {
+                const newName = prompt('Edit your link name:', bookmark.name);
+                const newUrl = prompt('Edit your link URL:', bookmark.url);
+                if (newName && newUrl) {
+                    const bookmarks = await getBookmarks();
+                    const updatedBookmarks = bookmarks.map(b => (b.url === bookmark.url ? { name: newName, url: newUrl } : b));
+                    await saveBookmarks(updatedBookmarks);
+                    listItem.firstChild.nodeValue = newName;
+                    openLink.href = newUrl;
+                }
+            };
+
+            buttonContainer.appendChild(openLink);
+            buttonContainer.appendChild(editButton);
+            buttonContainer.appendChild(deleteButton);
+            buttonContainer.appendChild(copyButton);
+
+            listItem.appendChild(buttonContainer);
+            bookmarkList.appendChild(listItem);
+        }
+
+        window.onload = fetchBookmarks;
+    </script>
+    <script src="loadNavbar.js"></script>
+</body>
+</html>

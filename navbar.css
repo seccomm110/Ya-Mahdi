@@ -1,0 +1,246 @@
+
+#navbar-placeholder {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px; /* Adds space below navbar */
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+*{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+}
+body {
+    /* font-family: Arial, sans-serif; */
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    color: #fff; 
+    background-color: #00796b;
+    /* color:#333; */
+    transform: translateX(-250px);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    padding-top: 60px;
+    border-right: #2F4F4F 2px solid;
+}
+
+.sidebar.open {
+    transform: translateX(0);
+}
+
+.sidebar-toggle {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    /* background-color: #ff7f50; */
+    background-color:red;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    z-index: 1100;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar ul li {
+    padding: 10px 15px;
+    margin: 10px 0px;
+    /* justify-content: space-between; */
+    border-radius: 5px;
+
+}
+
+.sidebar ul li a {
+    color: #fff;
+    /* color: #333; */
+    text-decoration: none;
+    display: block;
+    padding:5px;
+    font-size: small;
+}
+
+.sidebar ul li:hover {
+    /* background-color: #ff6347; */
+    background-color: #333;
+
+    border-radius: 5px;
+}
+
+/* Main content styling */
+.main-content {
+    margin-left: 0;
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+}
+
+.main-content.shifted {
+    margin-left: 250px;
+}
+
+/* Header image styling */
+.bg-img {
+    z-index: 1;
+    height: 250px;
+    background-image: url('imgs/bg1.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    padding: 130px;
+    color: #2F4F4F;
+}
+
+.arabic-text {
+    font-family: 'Lalezar', cursive;
+}
+
+.card-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 20px;
+}
+
+.card {
+    border: 1px solid #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px;
+    width: 200px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s, background-color 0.3s;
+}
+
+.card:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.card h3 {
+    margin-top: 0;
+    color: #eed66e;
+}
+
+a {
+    display: block;
+    /* margin: 5px 0; */
+    text-decoration: none;
+    color: #ffd700;
+}
+
+.content {
+    display: none;
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.8);
+    text-align: left;
+    color: #f5f5f5;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #333;
+    color: #fff;
+}
+
+.close-button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.close-button:hover {
+    background-color: #e60000;
+}
+
+
+/* Basic Dropdown Styling */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    /* background-color: #f9f9f9; */
+    background-color: #334;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    min-width: 160px;
+    z-index: 1;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Show Dropdown Content on Hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Dropdown Link Styling */
+.dropdown-content li a {
+    color: black;
+    padding: 8px 12px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content {
+    max-height: 300px; /* Adjust height as needed */
+    overflow-y: auto; /* Enable vertical scrolling */
+    display: none; /* Initially hide the dropdown */
+}
+
+.dropdown:hover .dropdown-content {
+    display: block; /* Show dropdown on hover */
+}
+
+
+
+
+
+
+
+
+
+
+
+/* For Firefox */
+.sidebar {
+    scrollbar-width: thin; /* Makes the scrollbar thinner */
+    scrollbar-color: white #00796b; /* Thumb color and track color */
+}

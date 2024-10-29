@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al Mahdi</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
+    
+    </style>
+    <link rel="stylesheet" href="pages/navbar.css">
+</head>
+<body>
+    <div id="navbar-placeholder"></div>
+
+
+    <div class="main-content" id="mainContent">
+        <!-- Header image and text -->
+        <header>
+            <div class="bg-img">
+                <div style="display: flex; justify-content: space-between;">
+                    <div style="text-align: left;">
+                        <p class="ya-sahibaz-zamaan arabic-text">صلى الله عليك يا ولي العصر (عج) أدركنا</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <p class="bismillah arabic-text">بسم الله الرحمن الرحيم</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page content -->
+        <h1>Secondary Committee</h1>
+
+        <div class="quote" id="quote"></div>
+
+        <div class="card-container" id="cardContainer">
+            <!-- Card 1 for 3 files -->
+            <div class="card">
+                <h3>Class Details</h3>
+                <a href="#" onclick="showContent('AUD1','Dashboard/AUD1- Class Detail.xlsx')">AUD1</a>
+                <a href="#" onclick="showContent('DS3', 'Dashboard/DS3 - Class Detail.xlsx')">DS3</a>
+                <a href="#" onclick="showContent('DS5', 'Dashboard/DS5 - Class Detail.xlsx')">DS5</a>
+            </div>
+            <!-- Card 2 for 1 file -->
+            <div class="card">
+                <h3>Events</h3>
+                <a href="#" onclick="showContent('Event', 'Dashboard/Event 2024.xlsx')">Event</a>
+            </div>
+            <!-- Card 3 for 1 file -->
+            <div class="card">
+                <h3>Report</h3>
+                <a href="#" onclick="showContent('Sample PDF', 'path/to/file.pdf')">Sample PDF</a>
+            </div>
+        </div>
+
+        <div class="content" id="contentArea">
+            <button class="close-button" onclick="closeContent()">X</button>
+            <div id="fileContent"></div>
+        </div>
+
+        <script>
+            const quotes = [
+                "The earth is but one country, and mankind its citizens.",
+                "The best way to find yourself is to lose yourself in the service of others.",
+                "Service to others is the rent you pay for your room here on earth.",
+                "Act as if what you do makes a difference. It does.",
+                "The future belongs to those who believe in the beauty of their dreams."
+            ];
+
+            function displayQuote() {
+                const quoteElement = document.getElementById('quote');
+                const randomIndex = Math.floor(Math.random() * quotes.length);
+                quoteElement.textContent = quotes[randomIndex];
+            }
+
+            function showContent(fileName, filePath) {
+                const contentArea = document.getElementById('contentArea');
+                const fileContent = document.getElementById('fileContent');
+                contentArea.style.display = 'block';
+
+                const extension = filePath.split('.').pop().toLowerCase();
+                if (extension === 'pdf') {
+                    fileContent.innerHTML = `<h2>${fileName}</h2><iframe src="${filePath}" width="100%" height="600px"></iframe>`;
+                } else if (extension === 'xlsx') {
+                    fetch(filePath)
+                        .then(response => response.arrayBuffer())
+                        .then(data => {
+                            const workbook = XLSX.read(data, { type: "array" });
+                            const sheetName = workbook.SheetNames[0];
+                            const worksheet = workbook.Sheets[sheetName];
+                            const html = XLSX.utils.sheet_to_html(worksheet);
+                            fileContent.innerHTML = `<h2>${fileName}</h2>${html}`;
+                        });
+                }
+            }
+
+            function closeContent() {
+                const contentArea = document.getElementById('contentArea');
+                contentArea.style.display = 'none';
+                document.getElementById('fileContent').innerHTML = '';
+            }
+
+            displayQuote();
+
+           
+        </script>
+    </div>
+    <script src="loadNavbar.js"></script>
+</body>
+</html>

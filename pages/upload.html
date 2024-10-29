@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Files</title>
+    <script src="../js/upload.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333; /* Dark text color */
+            padding: 20px;
+        }
+
+        h1 {
+            color: #ff8c00; /* Orange color for heading */
+        }
+
+        form {
+            background-color: rgba(255, 255, 255, 0.9); /* Light opaque background */
+            border-radius: 8px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Slight shadow */
+            padding: 20px;
+            display: inline-block;
+        }
+        .container1{
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        select, input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #ff8c00; /* Orange color for buttons */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #ffb74d; /* Lighter orange on hover */
+        }
+
+        #upload-status {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #ff8c00; /* Orange color for status */
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar-placeholder"></div>
+    <div class="container1">
+    <h1>Upload Files to Specific Folder</h1>
+    
+    <!-- Form for uploading files -->
+    <form id="upload-form">
+        <label for="folder-select">Select Folder:</label>
+        <select id="folder-select">
+            <option value="Attendance">Attendance</option>
+            <option value="Articles">Articles</option>
+            <option value="Books/Adl">Adl</option>
+            <option value="Books/Ahqaam">Ahqaam</option>
+            <option value="Books/General">General</option>
+            <option value="Books/Imamat">Imamat</option>
+            <option value="Books/Mahdaviyat">Mahdaviyat</option>
+            <option value="Books/Nabuwat">Nabuwat</option>
+            <option value="Books/Qayamat">Qayamat</option>
+            <option value="Books/Tawheed">Tawheed</option>
+            <option value="CheckList/HalfYearly">HalfYearly</option>
+            <option value="CheckList/Monthly">Monthly</option>
+            <option value="CheckList/Quarterly">Quarterly</option>
+            <option value="CheckList/Weekly">Weekly</option>
+            <!-- Add more options for other folders and subfolders -->
+        </select>
+
+        <label for="file-input">Choose File:</label>
+        <input type="file" id="file-input" multiple accept=".pdf, .docx, .txt, .jpg, .jpeg, .png">
+        
+
+        <button type="submit">Upload</button>
+    </form>
+</div>
+    <div id="upload-status"></div> <!-- To show upload status -->
+    <script src="loadNavbar.js"></script>
+
+</body>
+</html>
