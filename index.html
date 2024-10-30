@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ya Mahdi</title>
+    <script>
+        // Redirect to login if not logged in
+        if (!localStorage.getItem("loggedIn")) {
+            window.location.href = "login.html";
+        }
+    </script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
 
     <style>
@@ -24,13 +31,13 @@
         .left {
             width: 70%;
             height: 100vh;
-            display: flex;
+            /* display: flex; */
             align-items: flex-start;
             justify-content: flex-start;
             flex-direction: column;
             padding: 20px;
             position: relative;
-            overflow: hidden;
+            /* overflow: hidden; */
         }
 
         .left::after {
@@ -106,8 +113,31 @@
             .left h1 {
                 font-size: 2rem;
             }
+
+            /* Remove background image for smaller screens */
+            .right {
+                background-image: none; /* Ensure no background image is applied */
+            }
         }
-        
+
+        @media (max-width: 480px) {
+            .left h1 {
+                font-size: 1.5rem; /* Further reduce font size */
+            }
+
+            .ayat-container h2, .quote-container h2 {
+                font-size: 1.2rem; /* Adjust heading sizes */
+            }
+
+            .ayat-container p, .quote-container p {
+                font-size: 1rem; /* Adjust paragraph sizes */
+            }
+
+            .translation {
+                font-size: 0.9rem; /* Adjust translation sizes */
+            }
+        }
+
     </style>
     
 </head>
@@ -115,6 +145,8 @@
     
     <div class="left">
         <div id="navbar-placeholder"></div>
+        
+        <br>
         <h1>Secondary Committee</h1>
         
         <!-- Qur'anic Ayat Section -->
@@ -135,6 +167,19 @@
   
     <div class="right" id="rightSection"></div> <!-- Give an ID to access it in JavaScript -->
 
+
+    <button id="logoutButton" style="position: fixed; bottom: 20px; left: 20px; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        Logout
+    </button>
+    
+    <script>
+        // Logout function
+document.getElementById("logoutButton").addEventListener("click", function() {
+    localStorage.removeItem("loggedIn"); // Clear login status
+    window.location.href = "login.html";  // Redirect to login page
+});
+
+    </script>
     <script>
         const quotes = [
             {
@@ -217,6 +262,6 @@
         displayContent();
     </script>
     <script src="loadNavbar.js"></script>
-
+    
 </body>
 </html>

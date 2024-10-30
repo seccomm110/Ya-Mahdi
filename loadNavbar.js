@@ -26,3 +26,5 @@ function toggleSidebar() {
 function goBack() {
   window.history.back();
 }
+
+

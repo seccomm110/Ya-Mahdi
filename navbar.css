@@ -27,7 +27,7 @@ body {
     height: 100vh;
     background-color: #00796b;
     color: #fff;
-    transform: translateX(-250px);
+    transform: translateX(-250px); /* Start hidden */
     transition: transform 0.3s ease;
     z-index: 1000;
     display: flex;
@@ -38,7 +38,7 @@ body {
 }
 
 .sidebar.open {
-    transform: translateX(0);
+    transform: translateX(0); /* Show sidebar */
 }
 
 /* Toggle Button */
@@ -55,6 +55,7 @@ body {
     z-index: 1100;
 }
 
+/* Sidebar Menu */
 .sidebar ul {
     list-style: none;
     padding: 0;
@@ -120,7 +121,7 @@ body {
 }
 
 .main-content.shifted {
-    margin-left: 250px;
+    margin-left: 250px; /* Shift content when sidebar is open */
 }
 
 /* Header Background Image */
@@ -251,6 +252,7 @@ th {
     display: block;
 }
 
+/* Back Button Styling */
 .back-button {
     position: fixed;
     top: 15px;
@@ -262,4 +264,96 @@ th {
     cursor: pointer;
     border-radius: 5px;
     z-index: 1100;
+}
+
+/* Ayat Container */
+.ayat-container {
+    position: relative; /* Stacking context */
+    margin-bottom: 20px; /* Space below ayat */
+}
+
+/* Quote Container Styling */
+.quote-container {
+    background: rgba(255, 255, 255, 0.7);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    margin: 15px 0; /* Margin to separate from ayat */
+    width: 100%;
+    max-width: 600px;
+    min-height: 100px; /* Ensures a minimum height */
+    overflow: hidden; /* Prevents overflow issues */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px; /* Reduce sidebar width */
+    }
+
+    .sidebar-toggle {
+        left: 5px; /* Adjust button position */
+    }
+
+    .bg-img {
+        background-image: none; /* Remove background image on smaller screens */
+    }
+
+    .sidebar ul li {
+        padding: 8px 12px; /* Reduce padding for smaller screens */
+    }
+
+    .card {
+        width: 180px; /* Adjust card width for smaller screens */
+    }
+
+    .header {
+        padding: 80px; /* Adjust header padding */
+    }
+
+    /* Adjust font size */
+    .sidebar ul li a {
+        font-size: 0.8em; /* Smaller font size */
+    }
+
+    .right {
+        display: none; /* Hide the right section on smaller screens */
+    }
+
+    .quote-container {
+        min-height: 120px; /* Increased height for better visibility */
+    }
+
+    .ayat-container {
+        margin-bottom: 30px; /* Add extra space below ayat */
+    }
+}
+
+@media (max-width: 480px) {
+    .quote-container {
+        min-height: 100px; /* Adjust as needed for smaller devices */
+    }
+
+    .sidebar {
+        width: 100%; /* Full width sidebar */
+        transform: translateX(-100%); /* Start hidden */
+    }
+
+    .sidebar.open {
+        transform: translateX(0); /* Show sidebar when open */
+    }
+
+    .sidebar-toggle {
+        position: absolute; /* Make toggle button absolute for smaller screens */
+    }
+
+    .sidebar ul li {
+        text-align: center; /* Center align text */
+    }
+
+    .header {
+        flex-direction: column; /* Stack header elements vertically */
+        align-items: center; /* Center align items */
+        padding: 20px; /* Adjust padding */
+    }
 }
