@@ -90,7 +90,11 @@ function createActionButtons(file, container) {
     openButton.style.padding = '5px 10px';
     openButton.style.cursor = 'pointer';
     openButton.onclick = () => {
-        window.open(file.download_url, '_blank'); // Open file in a new tab
+        const link = document.createElement('a');
+        link.href = file.download_url;
+        link.target = '_blank';
+        link.click();
+         
     };
 
     // Download button
@@ -173,40 +177,6 @@ function checkAppOpenAndShare(fileUrl, title) {
                 alert(`Link copied to clipboard! Share it manually: ${fileUrl}`);
             })
             .catch(err => console.error('Failed to copy: ', err));
-    }
-}
-
-
-
-// Delete a file from GitHub
-async function deleteFile(file) {
-    const encodedFilePath = encodeURIComponent(file.path); // Encode the file path
-    const deleteUrl = `https://api.github.com/repos/seccomm110/Ya-Mahdi/contents/${encodedFilePath}`;
-
-    try {
-        const response = await fetch(deleteUrl, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `token ${token}`,
-                'Accept': 'application/vnd.github.v3+json'
-            },
-            body: JSON.stringify({
-                message: `Deleting file: ${file.name}`,
-                sha: file.sha
-            })
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`Failed to delete file: ${errorData.message}`);
-        }
-
-        console.log(`Deleted file: ${file.name}`);
-        alert(`${file.name} has been deleted.`);
-        fetchFiles(`https://api.github.com/repos/seccomm110/Ya-Mahdi/contents/${encodedFilePath}`); // Refresh the file list
-    } catch (error) {
-        console.error('Error deleting file:', error);
-        alert('Failed to delete file. Please try again later.');
     }
 }
 
