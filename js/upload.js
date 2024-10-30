@@ -86,3 +86,15 @@ async function uploadFileToGitHub(folder, fileName, fileContent) {
         body: JSON.stringify(payload),
     });
 }
+
+
+
+document.getElementById('folder-select').addEventListener('change', function () {
+    const selectedFolder = this.value;
+    const isBookFolder = selectedFolder.startsWith('Books/');
+
+    document.getElementById('title-label').style.display = isBookFolder ? 'block' : 'none';
+    document.getElementById('book-title').style.display = isBookFolder ? 'block' : 'none';
+    document.getElementById('description-label').style.display = isBookFolder ? 'block' : 'none';
+    document.getElementById('book-description').style.display = isBookFolder ? 'block' : 'none';
+});

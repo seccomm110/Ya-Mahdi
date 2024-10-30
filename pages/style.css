@@ -1,6 +1,7 @@
-.container1{
+.container1 {
     text-align: center;
 }
+
 body {
     font-family: Arial, sans-serif;
     background-color: #ffffff; /* White background */
@@ -11,10 +12,6 @@ h1, h2 {
     text-align: center;
     color: #ff8c00; /* Orange color for headings */
 }
-
-
-
-
 
 /* Container to align folder and file viewers side by side */
 .container {
@@ -41,7 +38,6 @@ h1, h2 {
     position: relative;
 }
 
-
 .file-list a {
     display: block;
     padding: 10px;
@@ -56,6 +52,7 @@ h1, h2 {
 .file-list a:hover {
     background-color: rgba(255, 140, 0, 0.4); /* Lighter orange on hover */
 }
+
 #canvas {
     width: 100%; /* Ensure canvas fits the viewer width */
     height: auto; /* Adjust height automatically */
@@ -82,7 +79,6 @@ h1, h2 {
 }
 
 nav {
-            
     margin-top: 20px;
     text-align: center;
 }
@@ -110,35 +106,6 @@ nav ul li a {
 nav ul li a:hover {
     background-color: #ff6347; /* Tomato color on hover */
 }
-
-
-
-nav .nav-links {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: inline-flex; /* To display the links horizontally */
-}
-
-nav .nav-links li {
-    margin: 0 10px;
-}
-
-nav .nav-links li a {
-    padding: 10px 20px;
-    text-decoration: none;
-    color: #fff;
-    background-color: #ff7f50; /* Coral color for navigation buttons */
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-nav .nav-links li a:hover {
-    background-color: #ff6347; /* Tomato color on hover */
-}
-
-
-/* ... (existing styles) */
 
 .share-button {
     background-color: red; /* Red color for Share button */
@@ -183,4 +150,49 @@ nav .nav-links li a:hover {
 
 .delete-button:hover {
     background-color: darkblue; /* Darker blue on hover */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Stack files and viewer vertically */
+        padding: 10px; /* Reduce padding */
+    }
+
+    .file-list {
+        flex: 1; /* Full width for file list */
+        margin-right: 0; /* Remove right margin */
+        height: auto; /* Auto height for flexibility */
+    }
+
+    #viewer {
+        flex: 1; /* Full width for viewer */
+        height: 400px; /* Adjust viewer height */
+    }
+
+    .pdf-controls {
+        flex-direction: column; /* Stack controls vertically */
+    }
+
+    .pdf-controls button {
+        margin: 5px 0; /* Adjust margin for buttons */
+    }
+}
+
+@media (max-width: 480px) {
+    h1, h2 {
+        font-size: 1.5em; /* Reduce heading size */
+    }
+
+    .pdf-controls button {
+        padding: 8px 10px; /* Smaller button size */
+    }
+
+    nav ul {
+        flex-direction: column; /* Stack navigation vertically */
+    }
+
+    nav ul li {
+        margin: 5px 0; /* Adjust margin for navigation */
+    }
 }

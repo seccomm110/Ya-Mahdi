@@ -57,19 +57,23 @@ async function fetchFiles(apiUrl) {
                 fileListElement.appendChild(folderLink);
                 fileListElement.appendChild(document.createElement('br'));
             } else if (file.name.endsWith('.xlsx') || file.name.endsWith('.pdf') || file.name.endsWith('.docx')) {
+                // Remove file extension for display
+                const displayName = file.name.replace(/\.[^/.]+$/, '');
+        
                 const fileLink = document.createElement('a');
                 fileLink.href = '#';
-                fileLink.textContent = `📄 ${file.name}`;
+                fileLink.textContent = `📄 ${displayName}`;
                 fileLink.addEventListener('click', (e) => {
                     e.preventDefault();
                     viewFile(file); // View the file when clicked
                 });
                 fileListElement.appendChild(fileLink);
-                
+        
                 // Create action buttons
                 createActionButtons(file, fileListElement);
             }
         });
+        
 
     } catch (error) {
         console.error('Error fetching files:', error);
