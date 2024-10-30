@@ -72,30 +72,43 @@
         <label for="folder-select">Select Folder:</label>
         <select id="folder-select">
             <option value="Attendance">Attendance</option>
+            <option value="Achievement">Achievement</option>
+            <option value="performance">Performance</option>
             <option value="Articles">Articles</option>
+            <option value="MinutesOfMeetings">Minutes Of Meeting</option>
+<hr>
+            <option value="Books/Tawheed">Tawheed</option>
             <option value="Books/Adl">Adl</option>
+            <option value="Books/Nabuwat">Nabuwat</option>
+            <option value="Books/Imamat">Imamat</option>
+            <option value="Books/Qayamat">Qayamat</option>
+            <option value="Books/Mahdaviyat">Mahdaviyat</option>
             <option value="Books/Ahqaam">Ahqaam</option>
             <option value="Books/General">General</option>
-            <option value="Books/Imamat">Imamat</option>
-            <option value="Books/Mahdaviyat">Mahdaviyat</option>
-            <option value="Books/Nabuwat">Nabuwat</option>
-            <option value="Books/Qayamat">Qayamat</option>
-            <option value="Books/Tawheed">Tawheed</option>
+            <hr>
+            <h3>CheckList</h3>
             <option value="CheckList/HalfYearly">HalfYearly</option>
             <option value="CheckList/Monthly">Monthly</option>
             <option value="CheckList/Quarterly">Quarterly</option>
             <option value="CheckList/Weekly">Weekly</option>
+            <hr>
+            <option value="Events">Events</option>
+            <hr>
+            <option value="all">Class Details</option>
+            <option value="all">Class Master Marksheet</option>
+            <hr>
+
             <!-- Add more options for other folders and subfolders -->
         </select>
 
         <label for="file-input">Choose File:</label>
-        <input type="file" id="file-input" multiple accept=".pdf, .docx, .txt, .jpg, .jpeg, .png">
+        <input type="file" id="file-input" accept="*/*" multiple>
         
 
         <button type="submit">Upload</button>
     </form>
-</div>
     <div id="upload-status"></div> <!-- To show upload status -->
+</div>
     <script src="loadNavbar.js"></script>
 
 </body>

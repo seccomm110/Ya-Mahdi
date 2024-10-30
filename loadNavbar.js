@@ -22,3 +22,7 @@ function toggleSidebar() {
   sidebar.classList.toggle('open');
   mainContent.classList.toggle('shifted');
 }
+
+function goBack() {
+  window.history.back();
+}

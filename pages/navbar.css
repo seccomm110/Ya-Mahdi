@@ -1,4 +1,14 @@
+/* Global Styles */
+* {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/* Sticky Navbar Placeholder */
 #navbar-placeholder {
     width: 100%;
     padding: 10px;
@@ -8,44 +18,35 @@
     z-index: 10;
 }
 
-*{
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-
-}
-body {
-    /* font-family: Arial, sans-serif; */
-    margin: 0;
-    padding: 0;
-}
-
+/* Sidebar Styles */
 .sidebar {
     position: fixed;
     top: 0;
     left: 0;
     width: 250px;
     height: 100vh;
-    color: #fff; 
     background-color: #00796b;
-    /* color:#333; */
+    color: #fff;
     transform: translateX(-250px);
     transition: transform 0.3s ease;
     z-index: 1000;
     display: flex;
     flex-direction: column;
     padding-top: 60px;
-    border-right: #2F4F4F 2px solid;
+    border-right: 2px solid #2F4F4F;
+    overflow-y: auto; /* Enables scrolling in sidebar */
 }
 
 .sidebar.open {
     transform: translateX(0);
 }
 
+/* Toggle Button */
 .sidebar-toggle {
     position: fixed;
     top: 15px;
     left: 15px;
-    /* background-color: #ff7f50; */
-    background-color:red;
+    background-color: red;
     color: #fff;
     border: none;
     padding: 10px;
@@ -62,29 +63,56 @@ body {
 
 .sidebar ul li {
     padding: 10px 15px;
-    margin: 10px 0px;
-    /* justify-content: space-between; */
+    margin: 10px 0;
     border-radius: 5px;
-
 }
 
 .sidebar ul li a {
     color: #fff;
-    /* color: #333; */
     text-decoration: none;
     display: block;
-    padding:5px;
+    padding: 5px;
     font-size: small;
 }
 
 .sidebar ul li:hover {
-    /* background-color: #ff6347; */
     background-color: #333;
-
     border-radius: 5px;
 }
 
-/* Main content styling */
+/* Firefox Scrollbar Customization */
+.sidebar {
+    scrollbar-width: thin; /* Makes the scrollbar thinner */
+    scrollbar-color: white #00796b; /* Thumb color and track color */
+}
+
+/* Upload Button Inside Sidebar */
+.upload-icon {
+    margin: 20px auto;
+    width: 50px;
+    height: 50px;
+    background-color: #ff6347; /* Customize background color */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    text-decoration: none;
+    transition: transform 0.3s, background-color 0.3s;
+}
+
+.upload-icon:hover {
+    background-color: #ff4500; /* Change color on hover */
+    transform: scale(1.1); /* Slightly enlarge on hover */
+}
+
+.upload-icon svg {
+    width: 24px;
+    height: 24px;
+    fill: #fff; /* Icon color */
+}
+
+/* Main Content Adjustments */
 .main-content {
     margin-left: 0;
     padding: 20px;
@@ -95,7 +123,7 @@ body {
     margin-left: 250px;
 }
 
-/* Header image styling */
+/* Header Background Image */
 .bg-img {
     z-index: 1;
     height: 250px;
@@ -104,6 +132,7 @@ body {
     background-position: center;
 }
 
+/* Header Styling */
 .header {
     display: flex;
     justify-content: space-between;
@@ -115,6 +144,7 @@ body {
     font-family: 'Lalezar', cursive;
 }
 
+/* Card Container */
 .card-container {
     display: flex;
     justify-content: center;
@@ -145,11 +175,11 @@ body {
 
 a {
     display: block;
-    /* margin: 5px 0; */
     text-decoration: none;
     color: #ffd700;
 }
 
+/* Content Section */
 .content {
     display: none;
     margin-top: 20px;
@@ -161,6 +191,7 @@ a {
     color: #f5f5f5;
 }
 
+/* Table Styling */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -177,6 +208,7 @@ th {
     color: #fff;
 }
 
+/* Close Button Styling */
 .close-button {
     background-color: #ff4d4d;
     color: white;
@@ -191,12 +223,10 @@ th {
     background-color: #e60000;
 }
 
-
 /* Basic Dropdown Styling */
 .dropdown-content {
     display: none;
     position: absolute;
-    /* background-color: #f9f9f9; */
     background-color: #334;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     min-width: 160px;
@@ -204,9 +234,11 @@ th {
     list-style: none;
     padding: 0;
     margin: 0;
+    max-height: 300px; /* Adjust height as needed */
+    overflow-y: auto; /* Enable vertical scrolling */
 }
 
-/* Show Dropdown Content on Hover */
+/* Show Dropdown on Hover */
 .dropdown:hover .dropdown-content {
     display: block;
 }
@@ -219,28 +251,15 @@ th {
     display: block;
 }
 
-.dropdown-content {
-    max-height: 300px; /* Adjust height as needed */
-    overflow-y: auto; /* Enable vertical scrolling */
-    display: none; /* Initially hide the dropdown */
-}
-
-.dropdown:hover .dropdown-content {
-    display: block; /* Show dropdown on hover */
-}
-
-
-
-
-
-
-
-
-
-
-
-/* For Firefox */
-.sidebar {
-    scrollbar-width: thin; /* Makes the scrollbar thinner */
-    scrollbar-color: white #00796b; /* Thumb color and track color */
+.back-button {
+    position: fixed;
+    top: 15px;
+    left: 100px; /* Adjust this based on your design */
+    background-color: #00796b; /* Match the sidebar color */
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    z-index: 1100;
 }

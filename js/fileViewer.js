@@ -56,7 +56,7 @@ async function fetchFiles(apiUrl) {
                 });
                 fileListElement.appendChild(folderLink);
                 fileListElement.appendChild(document.createElement('br'));
-            } else if (file.name.endsWith('.xlsx') || file.name.endsWith('.pdf')) {
+            } else if (file.name.endsWith('.xlsx') || file.name.endsWith('.pdf') || file.name.endsWith('.docx')) {
                 const fileLink = document.createElement('a');
                 fileLink.href = '#';
                 fileLink.textContent = `📄 ${file.name}`;
@@ -77,10 +77,21 @@ async function fetchFiles(apiUrl) {
     }
 }
 
-// Create action buttons for download, share, and delete
 function createActionButtons(file, container) {
     const buttonContainer = document.createElement('div');
     buttonContainer.style.marginTop = '10px';
+
+    // Open button
+    const openButton = document.createElement('button');
+    openButton.innerHTML = 'Open'; 
+    openButton.style.backgroundColor = '#007BFF'; // Bootstrap primary color
+    openButton.style.color = 'white';
+    openButton.style.border = 'none';
+    openButton.style.padding = '5px 10px';
+    openButton.style.cursor = 'pointer';
+    openButton.onclick = () => {
+        window.open(file.download_url, '_blank'); // Open file in a new tab
+    };
 
     // Download button
     const downloadButton = document.createElement('button');
@@ -132,6 +143,7 @@ function createActionButtons(file, container) {
         }
     };
 
+    buttonContainer.appendChild(openButton); // Append Open button
     buttonContainer.appendChild(downloadButton);
     buttonContainer.appendChild(shareButton);
     buttonContainer.appendChild(deleteButton); 
@@ -164,38 +176,41 @@ function checkAppOpenAndShare(fileUrl, title) {
     }
 }
 
+
+
 // Delete a file from GitHub
 async function deleteFile(file) {
-    const deleteUrl = `https://api.github.com/repos/seccomm110/Ya-Mahdi/contents/${file.path}`;
-    
+    const encodedFilePath = encodeURIComponent(file.path); // Encode the file path
+    const deleteUrl = `https://api.github.com/repos/seccomm110/Ya-Mahdi/contents/${encodedFilePath}`;
+
     try {
         const response = await fetch(deleteUrl, {
             method: 'DELETE',
             headers: {
-                'Authorization': `token ${token}`, 
+                'Authorization': `token ${token}`,
                 'Accept': 'application/vnd.github.v3+json'
             },
             body: JSON.stringify({
-                message: `Deleting file: ${file.name}`, 
-                sha: file.sha 
+                message: `Deleting file: ${file.name}`,
+                sha: file.sha
             })
         });
 
         if (!response.ok) {
-            const errorData = await response.json(); 
+            const errorData = await response.json();
             throw new Error(`Failed to delete file: ${errorData.message}`);
         }
 
         console.log(`Deleted file: ${file.name}`);
         alert(`${file.name} has been deleted.`);
-        fetchFiles(`https://api.github.com/repos/seccomm110/Ya-Mahdi/contents/${file.path}`);
+        fetchFiles(`https://api.github.com/repos/seccomm110/Ya-Mahdi/contents/${encodedFilePath}`); // Refresh the file list
     } catch (error) {
         console.error('Error deleting file:', error);
         alert('Failed to delete file. Please try again later.');
     }
 }
 
-// View the file (XLSX or PDF)
+// View the file (XLSX, PDF, or DOCX)
 function viewFile(file) {
     const viewer = document.getElementById('viewer');
     viewer.style.display = 'block'; // Make viewer visible
@@ -218,8 +233,22 @@ function viewFile(file) {
             });
     } else if (file.name.endsWith('.pdf')) {
         loadPdf(fileUrl);
+    } else if (file.name.endsWith('.docx')) {
+        fetch(fileUrl)
+            .then(response => response.arrayBuffer())
+            .then(data => {
+                return mammoth.convertToHtml({ arrayBuffer: data });
+            })
+            .then(result => {
+                viewer.innerHTML = result.value; // Display the converted HTML
+                document.querySelector('.pdf-controls').style.display = 'none';
+            })
+            .catch(error => {
+                console.error('Error viewing DOCX file:', error);
+            });
     }
 }
+
 
 // Load and render the PDF
 function loadPdf(url) {

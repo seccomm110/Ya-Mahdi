@@ -36,25 +36,47 @@ document.getElementById('upload-form').addEventListener('submit', async function
 });
 
 async function uploadFileToGitHub(folder, fileName, fileContent) {
-    const githubUsername = 'seccomm110'; // Replace with your GitHub username
-    const repoName = 'Ya-Mahdi'; // Replace with your GitHub repo name
-    const branch = 'main'; // Replace with your branch name if different
+    const githubUsername = 'seccomm110';
+    const repoName = 'Ya-Mahdi';
+    const branch = 'main';
 
-    // Split the token into different parts
+    // Reconstruct the token
     const tokenPart1 = 'ghp_yj5ZnPqi54dV';
     const tokenPart2 = '1PNEbN6w4p1K3scfYz';
     const tokenPart3 = '3gckWa';
+    const token = `${tokenPart1}${tokenPart2}${tokenPart3}`;
+    
+    const encodedFileName = encodeURIComponent(fileName);
+    const url = `https://api.github.com/repos/${githubUsername}/${repoName}/contents/${folder}/${encodedFileName}`;
+    
+    // Step 1: Check if the file already exists
+    let sha = null;
+    try {
+        const getFileResponse = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json',
+            }
+        });
 
-    // Combine the token parts into one
-    const token = `${tokenPart1}${tokenPart2}${tokenPart3}`; // Reconstruct the full token
+        if (getFileResponse.ok) {
+            const fileData = await getFileResponse.json();
+            sha = fileData.sha; // Get the existing file's SHA
+        }
+    } catch (error) {
+        console.error('Error checking file existence:', error);
+    }
 
-    const url = `https://api.github.com/repos/${githubUsername}/${repoName}/contents/${folder}/${fileName}`;
+    // Step 2: Create payload with the SHA if the file exists
     const payload = {
-        message: `Add ${fileName} to ${folder}`,
+        message: `Add or update ${fileName} in ${folder}`,
         content: fileContent, // File content in base64 format
         branch: branch,
+        ...(sha && { sha }) // Add the SHA if file exists, enabling update
     };
 
+    // Step 3: Upload or update the file
     return fetch(url, {
         method: 'PUT',
         headers: {
