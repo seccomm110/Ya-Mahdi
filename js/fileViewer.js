@@ -25,7 +25,8 @@ export function initializeFileViewer(folder) {
     fetchFiles(apiUrl);
 }
 
-// Fetch files and subfolders from GitHub
+
+
 async function fetchFiles(apiUrl) {
     try {
         const response = await fetch(apiUrl);
@@ -45,7 +46,13 @@ async function fetchFiles(apiUrl) {
             return;
         }
 
-        files.forEach(file => {
+        files.forEach((file, index) => { // Add index here
+            const fileItemContainer = document.createElement('div'); // New container for file and buttons
+            fileItemContainer.style.display = 'flex'; // Flexbox for horizontal layout
+            fileItemContainer.style.alignItems = 'center'; // Center align items
+            fileItemContainer.style.justifyContent = 'space-between'; // Space between file name and buttons
+            fileItemContainer.style.marginBottom = '10px'; // Space below each item
+        
             if (file.type === 'dir') {
                 const folderLink = document.createElement('a');
                 folderLink.href = '#';
@@ -54,24 +61,26 @@ async function fetchFiles(apiUrl) {
                     e.preventDefault();
                     fetchFiles(`${apiUrl}/${file.name}`);
                 });
-                fileListElement.appendChild(folderLink);
-                fileListElement.appendChild(document.createElement('br'));
+                fileItemContainer.appendChild(folderLink); // Add folder link to the container
             } else if (file.name.endsWith('.xlsx') || file.name.endsWith('.pdf') || file.name.endsWith('.docx')) {
-                // Remove file extension for display
                 const displayName = file.name.replace(/\.[^/.]+$/, '');
-        
+
+                // Create a serial number
+                const serialNumber = index + 1; // Serial number starts from 1
+
                 const fileLink = document.createElement('a');
                 fileLink.href = '#';
-                fileLink.textContent = `📄 ${displayName}`;
+                fileLink.textContent = `${serialNumber}. ${displayName}`; // Include serial number 📄
+                fileLink.style.marginRight = '10px'; // Add margin to the right of the file link
                 fileLink.addEventListener('click', (e) => {
                     e.preventDefault();
                     viewFile(file); // View the file when clicked
                 });
-                fileListElement.appendChild(fileLink);
         
-                // Create action buttons
-                createActionButtons(file, fileListElement);
+                fileItemContainer.appendChild(fileLink); // Add file link to the container
+                createActionButtons(file, fileItemContainer); // Create buttons within the same container
             }
+            fileListElement.appendChild(fileItemContainer); // Add the file item container to the list
         });
         
 
@@ -81,45 +90,57 @@ async function fetchFiles(apiUrl) {
     }
 }
 
+
+
 function createActionButtons(file, container) {
     const buttonContainer = document.createElement('div');
-    buttonContainer.style.marginTop = '10px';
+    buttonContainer.style.display = 'flex'; // Use flexbox for horizontal alignment
+    buttonContainer.style.alignItems = 'center'; // Center align items
+    buttonContainer.style.marginTop = '10px'; // Space above the buttons
+    buttonContainer.style.marginLeft = '10px'; // Space from the left side
+    buttonContainer.style.gap = '10px'; // Space between buttons
 
     // Open button
     const openButton = document.createElement('button');
-    openButton.innerHTML = 'Open'; 
-    openButton.style.backgroundColor = '#007BFF'; // Bootstrap primary color
+    openButton.innerHTML = '';  // ✅
+    openButton.style.backgroundColor = 'white'; // Bootstrap primary color
     openButton.style.color = 'white';
     openButton.style.border = 'none';
-    openButton.style.padding = '5px 10px';
+    // openButton.style.padding = '5px 10px';
     openButton.style.cursor = 'pointer';
     openButton.onclick = () => {
         const link = document.createElement('a');
         link.href = file.download_url;
         link.target = '_blank';
         link.click();
-         
     };
 
     // Download button
-    const downloadButton = document.createElement('button');
-    downloadButton.innerHTML = 'Download'; 
-    downloadButton.style.backgroundColor = '#333'; 
-    downloadButton.style.color = 'white';
-    downloadButton.style.border = 'none';
-    downloadButton.style.padding = '5px 10px';
-    downloadButton.style.cursor = 'pointer';
-    downloadButton.onclick = () => {
-        window.open(file.download_url); // Directly open the file for download
-    };
+const downloadButton = document.createElement('button');
+downloadButton.innerHTML = '⬇️'; 
+downloadButton.style.backgroundColor = 'white'; 
+downloadButton.style.color = 'black'; // Change text color for visibility
+downloadButton.style.border = '0px solid #ccc'; // Add border for visibility
+downloadButton.style.cursor = 'pointer';
+
+downloadButton.onclick = () => {
+    // Create a temporary link element
+    const link = document.createElement('a');
+    link.href = file.download_url; // Set the URL for the file
+    link.download = file.name; // Set the file name for download
+    document.body.appendChild(link); // Append to the document
+    link.click(); // Trigger the download
+    document.body.removeChild(link); // Clean up after download
+};
+
 
     // Share button
     const shareButton = document.createElement('button');
-    shareButton.innerHTML = 'Share'; 
-    shareButton.style.backgroundColor = 'green'; 
+    shareButton.innerHTML = '🔗'; 
+    shareButton.style.backgroundColor = 'white'; 
     shareButton.style.color = 'white';
     shareButton.style.border = 'none';
-    shareButton.style.padding = '5px 10px';
+    // shareButton.style.padding = '5px 10px';
     shareButton.style.cursor = 'pointer';
 
     shareButton.onclick = () => {
@@ -137,11 +158,11 @@ function createActionButtons(file, container) {
 
     // Delete button
     const deleteButton = document.createElement('button');
-    deleteButton.innerHTML = 'Delete'; 
-    deleteButton.style.backgroundColor = 'red'; 
+    deleteButton.innerHTML = '❌'; 
+    deleteButton.style.backgroundColor = 'white'; 
     deleteButton.style.color = 'white';
     deleteButton.style.border = 'none';
-    deleteButton.style.padding = '5px 10px';
+    // deleteButton.style.padding = '5px 10px';
     deleteButton.style.cursor = 'pointer';
 
     deleteButton.onclick = () => {
@@ -157,6 +178,7 @@ function createActionButtons(file, container) {
     buttonContainer.appendChild(deleteButton); 
     container.appendChild(buttonContainer);
 }
+
 
 function checkAppOpenAndShare(fileUrl, title) {
     const appName = 'WhatsApp'; 
@@ -184,22 +206,30 @@ function checkAppOpenAndShare(fileUrl, title) {
     }
 }
 
+
 // View the file (XLSX, PDF, or DOCX)
 function viewFile(file) {
     const viewer = document.getElementById('viewer');
     viewer.style.display = 'block'; // Make viewer visible
-    const fileUrl = file.download_url;
 
-    console.log(`Viewing file: ${file.name}, URL: ${fileUrl}`);
+    // Construct the URL for viewing in Office apps
+    const fileUrl = encodeURIComponent(file.download_url);
+    const officeViewerUrl = `https://view.officeapps.live.com/op/view.aspx?src=${fileUrl}`;
 
+    console.log(`Viewing file: ${file.name}, URL: ${officeViewerUrl}`);
+
+    // Open the office viewer URL for all supported file types
+    window.open(officeViewerUrl, '_blank'); // Opens in a new tab
+
+    // Alternatively, you can handle specific file types here if you prefer
+    
     if (file.name.endsWith('.xlsx')) {
         fetch(fileUrl)
             .then(response => response.arrayBuffer())
             .then(data => {
-                const workbook = XLSX.read(new Uint8Array(data), { type: "array" });
-                const sheet = workbook.Sheets[workbook.SheetNames[0]];
-                const html = XLSX.utils.sheet_to_html(sheet);
-                viewer.innerHTML = html;
+                const workbook = XLSX.read(data, { type: "array", cellStyles: true });
+                const sheet = workbook.Sheets[workbook.SheetNames[0]]; // Use the first sheet
+                displaySheetWithStyles(sheet);
                 document.querySelector('.pdf-controls').style.display = 'none';
             })
             .catch(error => {
@@ -221,7 +251,91 @@ function viewFile(file) {
                 console.error('Error viewing DOCX file:', error);
             });
     }
+    
 }
+
+// Function to display the sheet with styles
+function displaySheetWithStyles(sheet) {
+    const range = XLSX.utils.decode_range(sheet['!ref']); // Get range of the sheet
+    const table = document.createElement('table');
+    table.style.borderCollapse = 'collapse';
+
+    for (let row = range.s.r; row <= range.e.r; row++) {
+        const rowElement = document.createElement('tr');
+        for (let col = range.s.c; col <= range.e.c; col++) {
+            const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+            const cell = sheet[cellAddress];
+            const cellElement = document.createElement('td');
+
+            if (cell) {
+                cellElement.textContent = cell.v; // Set cell value
+                
+                // Apply background color if available
+                if (cell.s && cell.s.fill && cell.s.fill.fgColor && cell.s.fill.fgColor.rgb) {
+                    cellElement.style.backgroundColor = `#${cell.s.fill.fgColor.rgb}`;
+                }
+                
+                // Apply font styles if available
+                if (cell.s && cell.s.font) {
+                    if (cell.s.font.color && cell.s.font.color.rgb) {
+                        cellElement.style.color = `#${cell.s.font.color.rgb}`;
+                    }
+                    if (cell.s.font.bold) {
+                        cellElement.style.fontWeight = 'bold';
+                    }
+                    if (cell.s.font.italic) {
+                        cellElement.style.fontStyle = 'italic';
+                    }
+                }
+            }
+
+            cellElement.style.border = '1px solid #000'; // Border for table cells
+            cellElement.style.padding = '4px'; // Cell padding
+            rowElement.appendChild(cellElement);
+        }
+        table.appendChild(rowElement);
+    }
+
+    // Clear previous content and add the table to the viewer
+    const viewer = document.getElementById('viewer');
+    viewer.innerHTML = ''; // Clear any previous content
+    viewer.appendChild(table); // Display the table
+}
+
+
+
+function applyExcelStyles(sheet, tableElement) {
+    const range = XLSX.utils.decode_range(sheet['!ref']); // Get the range of the sheet
+    for (let row = range.s.r; row <= range.e.r; ++row) {
+        for (let col = range.s.c; col <= range.e.c; ++col) {
+            const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+            const cell = sheet[cellAddress];
+
+            if (cell && cell.s) { // Check if cell and style exist
+                const cellElement = tableElement.querySelector(`[data-cell="${cellAddress}"]`);
+                if (cellElement) {
+                    // Apply background color
+                    if (cell.s.fill && cell.s.fill.fgColor) {
+                        cellElement.style.backgroundColor = `#${cell.s.fill.fgColor.rgb}`;
+                    }
+                    // Apply font color
+                    if (cell.s.font && cell.s.font.color) {
+                        cellElement.style.color = `#${cell.s.font.color.rgb}`;
+                    }
+                    // Apply font bold
+                    if (cell.s.font && cell.s.font.bold) {
+                        cellElement.style.fontWeight = 'bold';
+                    }
+                    // Apply font italic
+                    if (cell.s.font && cell.s.font.italic) {
+                        cellElement.style.fontStyle = 'italic';
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 
 // Load and render the PDF

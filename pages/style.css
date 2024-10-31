@@ -42,7 +42,7 @@ h1, h2 {
     display: block;
     padding: 10px;
     margin: 10px 0;
-    background-color: rgba(255, 140, 0, 0.2); /* Transparent orange background for links */
+    /* background-color: rgba(255, 140, 0, 0.2); Transparent orange background for links */
     color: #333; /* Dark color for links */
     text-decoration: none;
     border-radius: 4px;
@@ -64,7 +64,7 @@ h1, h2 {
 }
 
 .pdf-controls button {
-    background-color: #ff8c00; /* Orange color for buttons */
+    /* background-color: #ff8c00; Orange color for buttons */
     color: #fff; /* White text color */
     border: none;
     padding: 10px 20px;
@@ -74,9 +74,6 @@ h1, h2 {
     transition: background-color 0.3s;
 }
 
-.pdf-controls button:hover {
-    background-color: #ffb74d; /* Lighter orange on hover */
-}
 
 nav {
     margin-top: 20px;
@@ -138,7 +135,7 @@ nav ul li a:hover {
 }
 
 .delete-button {
-    background-color: blue; /* Blue color for Delete button */
+    /* background-color: blue; Blue color for Delete button */
     color: white;
     border: none;
     padding: 8px 12px;
@@ -148,9 +145,7 @@ nav ul li a:hover {
     transition: background-color 0.3s;
 }
 
-.delete-button:hover {
-    background-color: darkblue; /* Darker blue on hover */
-}
+
 
 /* Responsive styles */
 @media (max-width: 768px) {

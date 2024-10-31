@@ -289,6 +289,7 @@ th {
 @media (max-width: 768px) {
     .sidebar {
         width: 200px; /* Reduce sidebar width */
+        text-align: left;
     }
 
     .sidebar-toggle {
@@ -314,6 +315,7 @@ th {
     /* Adjust font size */
     .sidebar ul li a {
         font-size: 0.8em; /* Smaller font size */
+        text-align: left;
     }
 
     .right {
