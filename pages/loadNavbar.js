@@ -1,3 +1,4 @@
+// Load Navbar Function
 function loadNavbar() {
   const xhr = new XMLHttpRequest();
 
@@ -14,8 +15,10 @@ function loadNavbar() {
   xhr.send();
 }
 
+// Call loadNavbar when DOM is ready
 document.addEventListener("DOMContentLoaded", loadNavbar);
 
+// Toggle Sidebar Function
 function toggleSidebar() {
   const sidebar = document.getElementById('sidebar');
   const mainContent = document.getElementById('mainContent');
@@ -23,6 +26,21 @@ function toggleSidebar() {
   mainContent.classList.toggle('shifted');
 }
 
+// Automatically Close Sidebar on Outside Click
+document.addEventListener("click", function(event) {
+  const sidebar = document.getElementById('sidebar');
+  const toggleButton = document.querySelector('.sidebar-toggle');
+  
+  // Check if the sidebar is open and the clicked element is outside the sidebar and toggle button
+  if (sidebar.classList.contains('open') && 
+      !sidebar.contains(event.target) && 
+      !toggleButton.contains(event.target)) {
+    sidebar.classList.remove('open');
+    mainContent.classList.remove('shifted');
+  }
+});
+
+// Go Back Function
 function goBack() {
   window.history.back();
 }

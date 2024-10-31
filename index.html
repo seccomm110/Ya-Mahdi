@@ -1,16 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ya Mahdi</title>
-    <script>
-        // Redirect to login if not logged in
-        if (!localStorage.getItem("loggedIn")) {
-            window.location.href = "login.html";
-        }
-    </script>
-    
     <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
 
     <style>
@@ -140,6 +130,16 @@
 
     </style>
     
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ya Mahdi</title>
+    <script>
+        // Redirect to login if not logged in
+        if (!localStorage.getItem("loggedIn")) {
+            window.location.href = "login.html";
+        }
+    </script>
+    
 </head>
 <body>
     
@@ -180,6 +180,8 @@ document.getElementById("logoutButton").addEventListener("click", function() {
 });
 
     </script>
+    <script src="loadNavbar.js"></script>
+
     <script>
         const quotes = [
             {
@@ -260,6 +262,25 @@ document.getElementById("logoutButton").addEventListener("click", function() {
         // Call functions on page load
         setRandomBackground();
         displayContent();
+// After loading navbar.html with AJAX
+document.addEventListener("DOMContentLoaded", function () {
+    // Wait for AJAX load
+    document.getElementById("navbar-placeholder").addEventListener("load", function () {
+        // Attach click event for each dropdown toggle link
+        const dropdownToggles = document.querySelectorAll(".dropdown > .dropbtn");
+
+        dropdownToggles.forEach(toggle => {
+            toggle.addEventListener("click", function (event) {
+                event.preventDefault();
+                const dropdownContent = this.nextElementSibling;
+                dropdownContent.style.display =
+                    dropdownContent.style.display === "block" ? "none" : "block";
+            });
+        });
+    });
+});
+
+        
     </script>
     <script src="loadNavbar.js"></script>
     

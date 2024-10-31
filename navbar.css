@@ -33,7 +33,7 @@ body {
     display: flex;
     flex-direction: column;
     padding-top: 60px;
-    border-right: 2px solid #2F4F4F;
+    /* border-right: 2px solid #2F4F4F; */
     overflow-y: auto; /* Enables scrolling in sidebar */
 }
 
@@ -225,24 +225,31 @@ th {
 }
 
 /* Basic Dropdown Styling */
+.dropdown {
+    position: relative; /* Position relative for absolute children */
+}
+
 .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #334;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    display: none; /* Keep it hidden by default */
+    position: absolute; /* Position it absolutely */
+    background-color: #334; /* Background color */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
     min-width: 160px;
-    z-index: 1;
+    z-index: 1001; /* Higher than sidebar */
     list-style: none;
     padding: 0;
     margin: 0;
     max-height: 300px; /* Adjust height as needed */
     overflow-y: auto; /* Enable vertical scrolling */
+    border-radius: 5px; /* Rounded corners */
+    right: 0; /* Align to the right of the parent */
 }
 
 /* Show Dropdown on Hover */
 .dropdown:hover .dropdown-content {
-    display: block;
+    display: block; /* Show the dropdown */
 }
+
 
 /* Dropdown Link Styling */
 .dropdown-content li a {
@@ -358,4 +365,14 @@ th {
         align-items: center; /* Center align items */
         padding: 20px; /* Adjust padding */
     }
+}
+
+/* Basic Dropdown Styling */
+.dropdown-content {
+    display: none; /* Keep it hidden by default */
+}
+
+/* Show Dropdown when the "show" class is added */
+.dropdown-content.show {
+    display: block; /* Only display when the class is active */
 }
