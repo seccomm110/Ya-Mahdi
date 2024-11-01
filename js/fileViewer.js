@@ -422,8 +422,8 @@ function renderPage(num) {
 
     // Initialize everything
     // initializeFileViewer('Books');
-    // initializeFileViewer('');
-    // setupPagination();
+    initializeFileViewer('Initialize');
+    setupPagination();
 
 
       // Logout function
