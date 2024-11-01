@@ -245,52 +245,27 @@ function checkAppOpenAndShare(fileUrl, title) {
 }
 
 
-// View the file (XLSX, PDF, or DOCX)
+
 function viewFile(file) {
-    const viewer = document.getElementById('viewer');
-    viewer.style.display = 'block'; // Make viewer visible
+    const fileUrl = file.download_url; // Get the direct download URL
+    console.log(`Opening file: ${file.name}, URL: ${fileUrl}`);
 
-    // Construct the URL for viewing in Office apps
-    const fileUrl = encodeURIComponent(file.download_url);
-    const officeViewerUrl = `https://view.officeapps.live.com/op/view.aspx?src=${fileUrl}`;
-
-    console.log(`Viewing file: ${file.name}, URL: ${officeViewerUrl}`);
-
-    // Open the office viewer URL for all supported file types
-    window.open(officeViewerUrl, '_blank'); // Opens in a new tab
-
-    // Alternatively, you can handle specific file types here if you prefer
+    // Check the file extension to determine how to open it
+    const extension = file.name.split('.').pop().toLowerCase();
     
-    if (file.name.endsWith('.xlsx')) {
-        fetch(fileUrl)
-            .then(response => response.arrayBuffer())
-            .then(data => {
-                const workbook = XLSX.read(data, { type: "array", cellStyles: true });
-                const sheet = workbook.Sheets[workbook.SheetNames[0]]; // Use the first sheet
-                displaySheetWithStyles(sheet);
-                document.querySelector('.pdf-controls').style.display = 'none';
-            })
-            .catch(error => {
-                console.error('Error viewing Excel file:', error);
-            });
-    } else if (file.name.endsWith('.pdf')) {
-        loadPdf(fileUrl);
-    } else if (file.name.endsWith('.docx')) {
-        fetch(fileUrl)
-            .then(response => response.arrayBuffer())
-            .then(data => {
-                return mammoth.convertToHtml({ arrayBuffer: data });
-            })
-            .then(result => {
-                viewer.innerHTML = result.value; // Display the converted HTML
-                document.querySelector('.pdf-controls').style.display = 'none';
-            })
-            .catch(error => {
-                console.error('Error viewing DOCX file:', error);
-            });
+    if (extension === 'pdf') {
+        // Open PDF in your custom PDF viewer
+        window.open(`pdf.html?file=${encodeURIComponent(fileUrl)}`, '_blank');
+    } else if (extension === 'doc' || extension === 'docx' || extension === 'xlsx') {
+        // Open Office files in their respective online viewers
+        const officeViewerUrl = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(fileUrl)}`;
+        window.open(officeViewerUrl, '_blank');
+    } else {
+        // For other file types, you can decide to handle them differently
+        window.open(fileUrl, '_blank');
     }
-    
 }
+
 
 // Function to display the sheet with styles
 function displaySheetWithStyles(sheet) {

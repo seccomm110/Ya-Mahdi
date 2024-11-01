@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Viewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            background-color: white; /* Changed background to white */
+            font-family: Arial, sans-serif;
+            overflow: auto; /* Enable scrolling */
+        }
+        #pdf-container {
+            width: 100%;
+            max-width: 800px; /* Set max width for better readability */
+            margin: 20px 0;
+        }
+        .page {
+            border: 1px solid #cccccc;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            opacity: 0; /* Start hidden for fade-in effect */
+            transition: opacity 0.5s ease, transform 0.3s ease; /* Fade-in and bounce effect */
+        }
+        #loading {
+            font-size: 18px;
+            color: #555;
+            display: none; /* Hidden by default */
+            position: fixed; /* Center loader */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: fadeIn 0.5s; /* Fade-in animation */
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .page-controls {
+            position: fixed; /* Make it sticky */
+            right: 20px; /* Align it to the right */
+            top: 20px; /* Set distance from the top */
+            background-color: white; /* Background color for visibility */
+            border: 1px solid #cccccc; /* Border for visibility */
+            border-radius: 5px; /* Rounded corners */
+            padding: 10px; /* Add padding */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Box shadow for depth */
+            z-index: 1000; /* Ensure it's on top */
+            opacity: 0; /* Start hidden for slide-in effect */
+            transform: translateX(100%); /* Slide from right */
+            animation: slideIn 0.5s forwards; /* Slide-in animation */
+        }
+        @keyframes slideIn {
+            to { 
+                opacity: 1; 
+                transform: translateX(0); 
+            }
+        }
+        .page-controls input {
+            padding: 5px;
+            font-size: 16px;
+            width: 60px;
+            text-align: center;
+            transition: box-shadow 0.3s, transform 0.3s; /* Input focus animation */
+        }
+        .page-controls input:focus {
+            box-shadow: 0 0 5px #007bff; /* Highlight input on focus */
+            outline: none; /* Remove default outline */
+            transform: scale(1.1); /* Expand input field on focus */
+        }
+        .page-controls button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            font-size: 16px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s; /* Button hover animation */
+        }
+        .page-controls button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05); /* Slightly enlarge button on hover */
+        }
+        .page-controls button:active {
+            animation: pulse 0.2s; /* Pulsing effect on button click */
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .success-animation {
+            animation: success 0.5s forwards; /* Animation for valid page navigation */
+        }
+        @keyframes success {
+            0% { background-color: white; }
+            100% { background-color: #d4edda; }
+        }
+        .error-shake {
+            animation: shake 0.5s; /* Shake animation for invalid input */
+        }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">Loading PDF...</div>
+    <div id="pdf-container"></div>
+    <div class="page-controls">
+        <span id="page-info">Page 1 of 1</span>
+        <input type="number" id="page-number" min="1" />
+        <button id="go-to-page">Go to Page</button>
+    </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const fileUrl = urlParams.get('file'); // Get the file URL from the query parameter
+
+        const pdfjsLib = window['pdfjs-dist/build/pdf'];
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+
+        let pdfDoc = null;
+        const pdfContainer = document.getElementById('pdf-container');
+        const loadingIndicator = document.getElementById('loading');
+        const pageInfo = document.getElementById('page-info');
+        const pageNumberInput = document.getElementById('page-number');
+        const goToPageButton = document.getElementById('go-to-page');
+
+        // Load and render the PDF
+        function loadPdf(url) {
+            loadingIndicator.style.display = 'block'; // Show loading indicator
+            pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+                pdfDoc = pdfDoc_;
+                loadingIndicator.style.display = 'none'; // Hide loading indicator
+                renderAllPages(); // Render all pages
+                updatePageInfo(); // Update page info
+            }).catch(error => {
+                console.error('Error loading PDF:', error);
+                loadingIndicator.textContent = 'Error loading PDF. Please try again.';
+            });
+        }
+
+        // Render all pages
+        function renderAllPages() {
+            for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+                renderPage(pageNum);
+            }
+        }
+
+        // Render a single PDF page
+        function renderPage(num) {
+            pdfDoc.getPage(num).then(function (page) {
+                const viewport = page.getViewport({ scale: 1 }); // Get the original viewport
+                const desiredHeight = window.innerHeight * 0.8; // Set height based on window size
+                const scale = desiredHeight / viewport.height; // Calculate scale to fit height
+
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                canvas.height = viewport.height * scale; // Set canvas height
+                canvas.width = viewport.width * scale; // Scale canvas width proportionally
+                canvas.className = 'page'; // Add class for styling
+                pdfContainer.appendChild(canvas); // Append canvas to the container
+
+                const renderContext = {
+                    canvasContext: ctx,
+                    viewport: page.getViewport({ scale: scale }) // Use calculated scale
+                };
+                page.render(renderContext).promise.then(function () {
+                    // Fade-in effect for rendered page and bounce
+                    canvas.style.opacity = 1; 
+                    canvas.style.transform = 'translateY(-10px)'; // Initial bounce
+                    setTimeout(() => {
+                        canvas.style.transform = 'translateY(0)'; // Reset to original position
+                    }, 100);
+                    console.log('Page ' + num + ' rendered');
+                });
+            });
+        }
+
+        // Update page info display
+        function updatePageInfo() {
+            pageInfo.textContent = `Page 1 of ${pdfDoc.numPages}`;
+        }
+
+        // Go to specific page
+        goToPageButton.addEventListener('click', function () {
+            const pageNum = parseInt(pageNumberInput.value);
+            if (pageNum > 0 && pageNum <= pdfDoc.numPages) {
+                // Clear the current PDF container
+                pdfContainer.innerHTML = '';
+                // Render the specific page
+                renderPage(pageNum);
+                // Update page info
+                pageInfo.textContent = `Page ${pageNum} of ${pdfDoc.numPages}`;
+                // Smooth scroll to the top of the PDF container
+                pdfContainer.scrollIntoView({ behavior: 'smooth' });
+                // Add success animation
+                goToPageButton.classList.add('success-animation');
+                setTimeout(() => {
+                    goToPageButton.classList.remove('success-animation');
+                }, 500);
+            } else {
+                pageNumberInput.classList.add('error-shake'); // Shake input on error
+                setTimeout(() => {
+                    pageNumberInput.classList.remove('error-shake');
+                }, 500);
+                alert('Please enter a valid page number.');
+            }
+        });
+
+        // Load the PDF when the page is loaded
+        loadPdf(fileUrl);
+    </script>
+</body>
+</html>
