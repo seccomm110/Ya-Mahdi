@@ -91,60 +91,98 @@ async function fetchFiles(apiUrl) {
 }
 
 
+async function deleteFile(file) {
+    const apiUrl = `https://api.github.com/repos/seccomm110/Ya-Mahdi/contents/${file.path}`;
+    
+    try {
+        // Step 1: Fetch the file's current information to get the SHA
+        const response = await fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'Authorization': `token ${token}`, // Use the token for authentication
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const fileInfo = await response.json();
+
+        // Step 2: Delete the file using its SHA
+        const deleteResponse = await fetch(apiUrl, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Accept': 'application/vnd.github.v3+json'
+            },
+            body: JSON.stringify({
+                message: `Deleting ${file.name}`, // Commit message
+                sha: fileInfo.sha // The SHA of the file
+            })
+        });
+
+        if (deleteResponse.ok) {
+            alert(`${file.name} has been deleted successfully.`);
+            // Optionally, refresh the file list after deletion
+            fetchFiles(apiUrl.substring(0, apiUrl.lastIndexOf('/'))); // Fetch the parent directory
+        } else {
+            throw new Error(`Error deleting file: ${deleteResponse.statusText}`);
+        }
+    } catch (error) {
+        console.error('Error deleting file:', error);
+        alert('Failed to delete the file. Please try again.');
+    }
+}
+
 
 function createActionButtons(file, container) {
     const buttonContainer = document.createElement('div');
-    buttonContainer.style.display = 'flex'; // Use flexbox for horizontal alignment
-    buttonContainer.style.alignItems = 'center'; // Center align items
-    buttonContainer.style.marginTop = '10px'; // Space above the buttons
-    buttonContainer.style.marginLeft = '10px'; // Space from the left side
-    buttonContainer.style.gap = '10px'; // Space between buttons
+    buttonContainer.style.display = 'flex';
+    buttonContainer.style.alignItems = 'center';
+    buttonContainer.style.marginTop = '10px';
+    buttonContainer.style.marginLeft = '10px';
+    buttonContainer.style.gap = '10px';
 
-    // Open button
+    // Open button (forces download with Blob API)
     const openButton = document.createElement('button');
-    openButton.innerHTML = '';  // ✅
-    openButton.style.backgroundColor = 'white'; // Bootstrap primary color
-    openButton.style.color = 'white';
+    openButton.innerHTML = '⬇️';
+    openButton.style.backgroundColor = 'white';
+    openButton.style.color = 'black';
     openButton.style.border = 'none';
-    // openButton.style.padding = '5px 10px';
     openButton.style.cursor = 'pointer';
-    openButton.onclick = () => {
-        const link = document.createElement('a');
-        link.href = file.download_url;
-        link.target = '_blank';
-        link.click();
+
+    openButton.onclick = async () => {
+        try {
+            const response = await fetch(file.download_url);
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = file.name;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Release the blob URL after download
+            URL.revokeObjectURL(blobUrl);
+        } catch (error) {
+            console.error("Failed to download the file:", error);
+        }
     };
-
-    // Download button
-const downloadButton = document.createElement('button');
-downloadButton.innerHTML = '⬇️'; 
-downloadButton.style.backgroundColor = 'white'; 
-downloadButton.style.color = 'black'; // Change text color for visibility
-downloadButton.style.border = '0px solid #ccc'; // Add border for visibility
-downloadButton.style.cursor = 'pointer';
-
-downloadButton.onclick = () => {
-    // Create a temporary link element
-    const link = document.createElement('a');
-    link.href = file.download_url; // Set the URL for the file
-    link.download = file.name; // Set the file name for download
-    document.body.appendChild(link); // Append to the document
-    link.click(); // Trigger the download
-    document.body.removeChild(link); // Clean up after download
-};
-
 
     // Share button
     const shareButton = document.createElement('button');
-    shareButton.innerHTML = '🔗'; 
-    shareButton.style.backgroundColor = 'white'; 
-    shareButton.style.color = 'white';
+    shareButton.innerHTML = '🔗';
+    shareButton.style.backgroundColor = 'white';
+    shareButton.style.color = 'black';
     shareButton.style.border = 'none';
-    // shareButton.style.padding = '5px 10px';
     shareButton.style.cursor = 'pointer';
 
     shareButton.onclick = () => {
-        const fileUrl = file.download_url; 
+        const fileUrl = file.download_url;
         if (navigator.share) {
             checkAppOpenAndShare(fileUrl, file.name);
         } else {
@@ -158,11 +196,10 @@ downloadButton.onclick = () => {
 
     // Delete button
     const deleteButton = document.createElement('button');
-    deleteButton.innerHTML = '❌'; 
-    deleteButton.style.backgroundColor = 'white'; 
-    deleteButton.style.color = 'white';
+    deleteButton.innerHTML = '❌';
+    deleteButton.style.backgroundColor = 'white';
+    deleteButton.style.color = 'black';
     deleteButton.style.border = 'none';
-    // deleteButton.style.padding = '5px 10px';
     deleteButton.style.cursor = 'pointer';
 
     deleteButton.onclick = () => {
@@ -172,12 +209,13 @@ downloadButton.onclick = () => {
         }
     };
 
-    buttonContainer.appendChild(openButton); // Append Open button
-    buttonContainer.appendChild(downloadButton);
-    buttonContainer.appendChild(shareButton);
-    buttonContainer.appendChild(deleteButton); 
-    container.appendChild(buttonContainer);
+    buttonContainer.appendChild(openButton);    // Append Open button
+    buttonContainer.appendChild(shareButton);    // Append Share button
+    buttonContainer.appendChild(deleteButton);   // Append Delete button
+    container.appendChild(buttonContainer);      // Add the button container to the file container
 }
+
+
 
 
 function checkAppOpenAndShare(fileUrl, title) {
