@@ -42,3 +42,9 @@ button:hover {
     margin: 0 10px; /* Space around the page number */
     font-weight: bold; /* Make page number bold */
 }
+
+
+
+.prev-page, .next-page{
+    display: none;
+}
