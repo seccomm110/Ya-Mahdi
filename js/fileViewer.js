@@ -14,12 +14,16 @@ let pdfDoc = null,
     canvas,
     ctx;
 
-// Initialize the file viewer for a folder
+    
+let currentFolder = ''; // Track the current folder
+
 export function initializeFileViewer(folder) {
+    // Update currentFolder and reset the file list
+    currentFolder = folder;
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
 
-    const apiUrl = `https://api.github.com/repos/seccomm110/Ya-Mahdi/contents/${folder}`;
+    const apiUrl = `https://api.github.com/repos/seccomm110/Ya-Mahdi/contents/${currentFolder}`;
     
     console.log(`Fetching files from: ${apiUrl}`);
     fetchFiles(apiUrl);
@@ -27,17 +31,29 @@ export function initializeFileViewer(folder) {
 
 
 
+
+let controller; // Define controller outside
+
 async function fetchFiles(apiUrl) {
+    // Abort previous request if exists
+    if (controller) controller.abort();
+
+    // Set up a new AbortController for this request
+    controller = new AbortController();
+
     try {
-        const response = await fetch(apiUrl);
-        
+        const response = await fetch(apiUrl, {
+            cache: "no-cache", // Force no-cache to prevent old responses
+            signal: controller.signal // Associate the controller signal with the request
+        });
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const files = await response.json();
         console.log("Fetched files:", files);
-        
+
         const fileListElement = document.getElementById('file-list');
         fileListElement.innerHTML = ''; // Clear loading message
 
@@ -46,13 +62,13 @@ async function fetchFiles(apiUrl) {
             return;
         }
 
-        files.forEach((file, index) => { // Add index here
-            const fileItemContainer = document.createElement('div'); // New container for file and buttons
-            fileItemContainer.style.display = 'flex'; // Flexbox for horizontal layout
-            fileItemContainer.style.alignItems = 'center'; // Center align items
-            fileItemContainer.style.justifyContent = 'space-between'; // Space between file name and buttons
-            fileItemContainer.style.marginBottom = '10px'; // Space below each item
-        
+        files.forEach((file, index) => {
+            const fileItemContainer = document.createElement('div');
+            fileItemContainer.style.display = 'flex';
+            fileItemContainer.style.alignItems = 'center';
+            fileItemContainer.style.justifyContent = 'space-between';
+            fileItemContainer.style.marginBottom = '10px';
+
             if (file.type === 'dir') {
                 const folderLink = document.createElement('a');
                 folderLink.href = '#';
@@ -61,32 +77,34 @@ async function fetchFiles(apiUrl) {
                     e.preventDefault();
                     fetchFiles(`${apiUrl}/${file.name}`);
                 });
-                fileItemContainer.appendChild(folderLink); // Add folder link to the container
+                fileItemContainer.appendChild(folderLink);
             } else if (file.name.endsWith('.xlsx') || file.name.endsWith('.pdf') || file.name.endsWith('.docx')) {
                 const displayName = file.name.replace(/\.[^/.]+$/, '');
-
-                // Create a serial number
-                const serialNumber = index + 1; // Serial number starts from 1
+                const serialNumber = index + 1;
 
                 const fileLink = document.createElement('a');
                 fileLink.href = '#';
-                fileLink.textContent = `${serialNumber}. ${displayName}`; // Include serial number 📄
-                fileLink.style.marginRight = '10px'; // Add margin to the right of the file link
+                fileLink.textContent = `${serialNumber}. ${displayName}`;
+                fileLink.style.marginRight = '10px';
                 fileLink.addEventListener('click', (e) => {
                     e.preventDefault();
-                    viewFile(file); // View the file when clicked
+                    viewFile(file);
                 });
-        
-                fileItemContainer.appendChild(fileLink); // Add file link to the container
-                createActionButtons(file, fileItemContainer); // Create buttons within the same container
+
+                fileItemContainer.appendChild(fileLink);
+                createActionButtons(file, fileItemContainer);
             }
-            fileListElement.appendChild(fileItemContainer); // Add the file item container to the list
+
+            fileListElement.appendChild(fileItemContainer);
         });
-        
 
     } catch (error) {
-        console.error('Error fetching files:', error);
-        document.getElementById('file-list').textContent = 'Error loading files. Please try again later.';
+        if (error.name === 'AbortError') {
+            console.log("Fetch aborted.");
+        } else {
+            console.error('Error fetching files:', error);
+            document.getElementById('file-list').textContent = 'Error loading files. Please try again later.';
+        }
     }
 }
 
