@@ -78,7 +78,7 @@ async function fetchFiles(apiUrl) {
                     fetchFiles(`${apiUrl}/${file.name}`);
                 });
                 fileItemContainer.appendChild(folderLink);
-            } else if (file.name.endsWith('.xlsx') || file.name.endsWith('.pdf') || file.name.endsWith('.docx')) {
+            } else if (file.name.endsWith('.xlsx') || file.name.endsWith('.pdf') || file.name.endsWith('.docx') || file.name.endsWith('.doc')) {
                 const displayName = file.name.replace(/\.[^/.]+$/, '');
                 const serialNumber = index + 1;
 
