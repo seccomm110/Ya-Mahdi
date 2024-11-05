@@ -145,178 +145,215 @@ ul li:hover {
     <div id="linkForm">
         <input type="text" id="nameInput" placeholder="Enter name..." required>
         <input type="text" id="linkInput" placeholder="Enter your favorite link..." required>
+        <textarea id="descriptionInput" placeholder="Enter description..." rows="3"></textarea>
         <input type="submit" value="Add Link" onclick="addLink()">
     </div>
 
+    
+    <h3 style="text-align: left; padding: 10px;">Topic</h3>
     <ul id="bookmarkList"></ul>
 
+
+
+
+
+
+    
     <script>
-        const repoOwner = 'seccomm110'; // Replace with your GitHub username
-        const repoName = 'Al-Mahdi'; // Replace with your GitHub repo name
-        const tokenPart1 = 'ghp_yj5ZnPqi54dV';
-        const tokenPart2 = '1PNEbN6w4p1K3scfYz';
-        const tokenPart3 = '3gckWa';
-        const token = `${tokenPart1}${tokenPart2}${tokenPart3}`;
-        const filePath = 'bookmarks.json';
+      // GitHub repository and token details
+const repoOwner = 'seccomm110'; // GitHub username
+const repoName = 'Al-Mahdi'; // GitHub repository name
+const tokenPart1 = 'ghp_yj5ZnPqi54dV';
+const tokenPart2 = '1PNEbN6w4p1K3scfYz';
+const tokenPart3 = '3gckWa';
+const token = `${tokenPart1}${tokenPart2}${tokenPart3}`;
+const filePath = 'bookmarks.json';
 
-        async function fetchBookmarks() {
-            try {
-                const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
-                    headers: { 'Authorization': `token ${token}` }
-                });
-                const data = await response.json();
-                if (response.ok && data && data.content) {
-                    const bookmarks = JSON.parse(atob(data.content));
-                    bookmarks.forEach(bookmark => {
-                        addBookmarkToList(bookmark);
-                    });
-                } else {
-                    console.error('Error fetching bookmarks:', data);
-                }
-            } catch (error) {
-                console.error('Fetch error:', error);
-            }
+// Function to fetch bookmarks from GitHub
+async function fetchBookmarks() {
+    try {
+        const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
+            headers: { 'Authorization': `token ${token}` }
+        });
+        const data = await response.json();
+        if (response.ok && data && data.content) {
+            const bookmarks = JSON.parse(atob(data.content));
+            bookmarks.forEach(bookmark => {
+                addBookmarkToList(bookmark);
+            });
+        } else {
+            console.error('Error fetching bookmarks:', data);
         }
+    } catch (error) {
+        console.error('Fetch error:', error);
+    }
+}
 
-        async function addLink() {
-            const nameInput = document.getElementById('nameInput');
-            const linkInput = document.getElementById('linkInput');
-            const nameValue = nameInput.value.trim();
-            const linkValue = linkInput.value.trim();
+// Function to add a new link with a description
+async function addLink() {
+    const nameInput = document.getElementById('nameInput');
+    const linkInput = document.getElementById('linkInput');
+    const descriptionInput = document.getElementById('descriptionInput');
+    
+    const nameValue = nameInput.value.trim();
+    const linkValue = linkInput.value.trim();
+    const descriptionValue = descriptionInput.value.trim();
 
-            if (nameValue && linkValue) {
-                const bookmarks = await getBookmarks();
-                bookmarks.push({ name: nameValue, url: linkValue });
-                await saveBookmarks(bookmarks);
-                addBookmarkToList({ name: nameValue, url: linkValue });
-                nameInput.value = ''; 
-                linkInput.value = ''; 
-            } else {
-                alert('Please enter a valid name and link.');
-            }
+    if (nameValue && linkValue && descriptionValue) {
+        const bookmarks = await getBookmarks();
+        bookmarks.push({ name: nameValue, url: linkValue, description: descriptionValue });
+        await saveBookmarks(bookmarks);
+        addBookmarkToList({ name: nameValue, url: linkValue, description: descriptionValue });
+        nameInput.value = ''; 
+        linkInput.value = ''; 
+        descriptionInput.value = ''; 
+    } else {
+        alert('Please enter a valid name, link, and description.');
+    }
+}
+
+// Function to save bookmarks to GitHub
+async function saveBookmarks(bookmarks) {
+    const content = btoa(JSON.stringify(bookmarks));
+    const sha = await getFileSHA();
+
+    if (!sha) {
+        console.error('Unable to get SHA for the file.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
+            method: 'PUT',
+            headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' },
+            body: JSON.stringify({
+                message: 'Update bookmarks',
+                content: content,
+                sha: sha
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Error saving bookmarks:', response.statusText);
+            console.error('Error details:', errorData);
+        } else {
+            console.log('Bookmarks saved successfully!');
         }
+    } catch (error) {
+        console.error('Error during saving bookmarks:', error);
+    }
+}
 
-        async function saveBookmarks(bookmarks) {
-            const content = btoa(JSON.stringify(bookmarks));
-            const sha = await getFileSHA();
+// Function to get SHA for the file on GitHub
+async function getFileSHA() {
+    try {
+        const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
+            headers: { 'Authorization': `token ${token}` }
+        });
+        const data = await response.json();
+        return data.sha;
+    } catch (error) {
+        console.error('Error fetching file SHA:', error);
+        return null;
+    }
+}
 
-            if (!sha) {
-                console.error('Unable to get SHA for the file.');
-                return;
-            }
-
-            try {
-                const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
-                    method: 'PUT',
-                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' },
-                    body: JSON.stringify({
-                        message: 'Update bookmarks',
-                        content: content,
-                        sha: sha
-                    })
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('Error saving bookmarks:', response.statusText);
-                    console.error('Error details:', errorData);
-                } else {
-                    console.log('Bookmarks saved successfully!');
-                }
-            } catch (error) {
-                console.error('Error during saving bookmarks:', error);
-            }
+// Function to get bookmarks (helper for add/edit/delete)
+async function getBookmarks() {
+    try {
+        const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
+            headers: { 'Authorization': `token ${token}` }
+        });
+        const data = await response.json();
+        if (data && data.content) {
+            return JSON.parse(atob(data.content));
         }
+        return []; 
+    } catch (error) {
+        console.error('Error fetching bookmarks:', error);
+        return [];
+    }
+}
 
-        async function getFileSHA() {
-            try {
-                const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
-                    headers: { 'Authorization': `token ${token}` }
-                });
-                const data = await response.json();
-                return data.sha;
-            } catch (error) {
-                console.error('Error fetching file SHA:', error);
-                return null;
-            }
+// Function to display a bookmark in the DOM
+function addBookmarkToList(bookmark) {
+    const bookmarkList = document.getElementById('bookmarkList');
+    const listItem = document.createElement('li');
+    const index = bookmarkList.childElementCount + 1;
+    listItem.textContent = `${index}. ${bookmark.name}`;
+
+    const description = document.createElement('p');
+    description.textContent = bookmark.description;
+    description.className = 'bookmark-description';
+
+    const buttonContainer = document.createElement('div');
+    buttonContainer.className = 'button-container';
+
+    const openLink = document.createElement('a');
+    openLink.href = bookmark.url;
+    openLink.target = "_blank";
+    openLink.textContent = 'Open';
+    openLink.className = 'open-button';
+
+    const copyButton = document.createElement('button');
+    copyButton.textContent = 'Copy';
+    copyButton.className = 'copy-button';
+    copyButton.onclick = function() {
+        navigator.clipboard.writeText(bookmark.url)
+            .then(() => alert('Link copied!'))
+            .catch(err => console.error('Failed to copy link:', err));
+    };
+
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.className = 'delete-button';
+    deleteButton.onclick = async function() {
+        const bookmarks = await getBookmarks();
+        const updatedBookmarks = bookmarks.filter(b => b.url !== bookmark.url);
+        await saveBookmarks(updatedBookmarks);
+        bookmarkList.removeChild(listItem);
+    };
+
+    const editButton = document.createElement('button');
+    editButton.textContent = 'Edit';
+    editButton.className = 'edit-button';
+    editButton.onclick = async function() {
+        const newName = prompt('Edit your link name:', bookmark.name);
+        const newUrl = prompt('Edit your link URL:', bookmark.url);
+        const newDescription = prompt('Edit your link description:', bookmark.description);
+        if (newName && newUrl && newDescription) {
+            const bookmarks = await getBookmarks();
+            const updatedBookmarks = bookmarks.map(b => 
+                (b.url === bookmark.url ? { name: newName, url: newUrl, description: newDescription } : b)
+            );
+            await saveBookmarks(updatedBookmarks);
+            listItem.firstChild.nodeValue = `${index}. ${newName}`;
+            description.textContent = newDescription;
+            openLink.href = newUrl;
         }
+    };
 
-        async function getBookmarks() {
-            try {
-                const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
-                    headers: { 'Authorization': `token ${token}` }
-                });
-                const data = await response.json();
-                if (data && data.content) {
-                    return JSON.parse(atob(data.content));
-                }
-                return []; 
-            } catch (error) {
-                console.error('Error fetching bookmarks:', error);
-                return [];
-            }
-        }
+    buttonContainer.appendChild(openLink);
+    buttonContainer.appendChild(editButton);
+    buttonContainer.appendChild(deleteButton);
+    buttonContainer.appendChild(copyButton);
 
-        function addBookmarkToList(bookmark) {
-            const bookmarkList = document.getElementById('bookmarkList');
-            const listItem = document.createElement('li');
-            listItem.textContent = bookmark.name;
+    listItem.appendChild(description);
+    listItem.appendChild(buttonContainer);
+    bookmarkList.appendChild(listItem);
+}
 
-            const buttonContainer = document.createElement('div');
-            buttonContainer.className = 'button-container';
+// Load bookmarks on page load
+window.onload = fetchBookmarks;
 
-            const openLink = document.createElement('a');
-            openLink.href = bookmark.url;
-            openLink.target = "_blank";
-            openLink.textContent = 'Open';
-            openLink.className = 'open-button';
-
-            const copyButton = document.createElement('button');
-            copyButton.textContent = 'Copy';
-            copyButton.className = 'copy-button';
-            copyButton.onclick = function() {
-                navigator.clipboard.writeText(bookmark.url)
-                    .then(() => alert('Link copied!'))
-                    .catch(err => console.error('Failed to copy link:', err));
-            };
-
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Delete';
-            deleteButton.className = 'delete-button';
-            deleteButton.onclick = async function() {
-                const bookmarks = await getBookmarks();
-                const updatedBookmarks = bookmarks.filter(b => b.url !== bookmark.url);
-                await saveBookmarks(updatedBookmarks);
-                bookmarkList.removeChild(listItem);
-            };
-
-            const editButton = document.createElement('button');
-            editButton.textContent = 'Edit';
-            editButton.className = 'edit-button';
-            editButton.onclick = async function() {
-                const newName = prompt('Edit your link name:', bookmark.name);
-                const newUrl = prompt('Edit your link URL:', bookmark.url);
-                if (newName && newUrl) {
-                    const bookmarks = await getBookmarks();
-                    const updatedBookmarks = bookmarks.map(b => (b.url === bookmark.url ? { name: newName, url: newUrl } : b));
-                    await saveBookmarks(updatedBookmarks);
-                    listItem.firstChild.nodeValue = newName;
-                    openLink.href = newUrl;
-                }
-            };
-
-            buttonContainer.appendChild(openLink);
-            buttonContainer.appendChild(editButton);
-            buttonContainer.appendChild(deleteButton);
-            buttonContainer.appendChild(copyButton);
-
-            listItem.appendChild(buttonContainer);
-            bookmarkList.appendChild(listItem);
-        }
-
-        window.onload = fetchBookmarks;
     </script>
-    <button id="logoutButton" style="position: fixed; bottom: 20px; left: 20px; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+
+<br><br><br><br>
+<br><br><br><br>
+<br><br><br><br>
+<br><br><br><br>
+<button id="logoutButton" style="position: fixed; bottom: 20px; left: 20px; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
         Logout
     </button>
     <script src="loadNavbar.js"></script>

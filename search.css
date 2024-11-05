@@ -1,0 +1,79 @@
+#searchOverlay {
+    display: none; /* Initially hidden */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8); /* Dark overlay */
+    justify-content: center; /* Center align */
+    align-items: center; /* Center align */
+    z-index: 10;
+}
+
+#searchContainer {
+    background: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    max-width: 600px; /* Set maximum width */
+    padding: 20px; /* Add padding */
+    width: 90%; /* Full width */
+}
+
+/* Updated Search Input Styles */
+#searchInput {
+    width: 100%; /* Full width */
+    padding: 15px; /* Increased padding */
+    border: 2px solid #007bff; /* Thicker blue border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 1.2rem; /* Increased font size */
+    margin-bottom: 20px; /* Margin below the input */
+    transition: border-color 0.3s; /* Transition effect for focus */
+}
+
+/* Search Input Focus Styles */
+#searchInput:focus {
+    outline: none; /* Remove default outline */
+    border-color: #0056b3; /* Darker blue on focus */
+}
+
+/* Updated Search Results Styles */
+#searchResults {
+    max-height: 60vh; /* Maximum height of results */
+    overflow-y: auto; /* Scrollable results */
+    color: #333; /* Dark text for readability */
+    background-color: white; /* White background for results */
+    padding: 15px; /* Padding inside results */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow for results */
+}
+
+/* List Item Styles */
+#searchResults div {
+    padding: 10px; /* Padding inside list items */
+    border-bottom: 1px solid #eee; /* Divider between items */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background 0.3s; /* Transition for hover effect */
+}
+
+/* List Item Hover Effect */
+#searchResults div:hover {
+    background: #f0f0f0; /* Light grey background on hover */
+}
+
+/* Close Button Styles */
+#closeSearch {
+    background-color: #f44336; /* Red */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px; /* Margin above the button */
+    transition: background 0.3s; /* Transition effect for hover */
+}
+
+/* Close Button Hover Effect */
+#closeSearch:hover {
+    background-color: #c62828; /* Darker red on hover */
+}

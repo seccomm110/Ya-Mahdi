@@ -450,3 +450,29 @@ document.getElementById("logoutButton").addEventListener("click", function() {
     localStorage.removeItem("loggedIn"); // Clear login status
     window.location.href = "https://seccomm110.github.io/Ya-Mahdi/login.html";  // Redirect to login page
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

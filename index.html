@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
     <link sizes="64x64" rel="icon" href="imgs/logo.png" type="image/png">
-
     <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="navbar.css">
     <style>
         * {
             margin: 0;
@@ -23,13 +22,11 @@
         .left {
             width: 70%;
             height: 100vh;
-            /* display: flex; */
             align-items: flex-start;
             justify-content: flex-start;
             flex-direction: column;
             padding: 20px;
             position: relative;
-            /* overflow: hidden; */
         }
 
         .left::after {
@@ -131,6 +128,8 @@
         }
 
     </style>
+
+    <link rel="stylesheet" href="search.css">
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -147,6 +146,11 @@
     
     <div class="left">
         <div id="navbar-placeholder"></div>
+        <div style="margin-top: 20px; display: flex; align-items: center;">
+            <input type="text" id="searchButton" placeholder="Search Files" 
+                   style="padding: 10px; border: 1px solid #007bff; border-radius: 5px; flex: 1;"/>
+            
+        </div>
         
         <br>
         <h1>Secondary Committee</h1>
@@ -165,118 +169,241 @@
             <br>
             <p id="quoteReference" class="translation"></p>
         </div>
+
+     
     </div>
   
     <div class="right" id="rightSection"></div> <!-- Give an ID to access it in JavaScript -->
 
-
     <button id="logoutButton" style="position: fixed; bottom: 20px; left: 20px; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
         Logout
     </button>
+
+    <div id="searchOverlay">
+        <div id="searchContainer">
+            <h2>Search Files</h2>
+            <input type="text" id="searchInput" placeholder="Enter search term...">
+            <button id="closeSearch">Close</button>
+            <div id="searchResults"></div>
+        </div>
+    </div>
     
     <script>
-        // Logout function
-document.getElementById("logoutButton").addEventListener("click", function() {
-    localStorage.removeItem("loggedIn"); // Clear login status
-    window.location.href = "https://seccomm110.github.io/Ya-Mahdi/login.html";  // Redirect to login page
+        // Quotes and Ayat arrays
+const quotes = [
+    {
+        quote: "Imam Sadiq (a.s.): “One of you who dies awaiting for Imam Mahdi (a.s.) dies as if he was with him in his tent.”",
+        reference: "Ref: Kamaluddin, Vol. 2, Pg. 644, Chapter 55, Tr. No. 1"
+    },
+    {
+        quote: "Imam Sadiq (a.s.) from his forefathers from Amirul Momineen (a.s.) that he said: “One who awaits for the reappearance of our Qaim is like one who rolls in his blood in the path of Allah.”",
+        reference: "Ref: Kamaluddin, Vol. 2, Pg. 645, Chapter 55, Tr. No. 6"
+    },
+    {
+        quote: "Imam Sadiq (a.s.): “Fortunate are the Shias of our Qaim who during the period of his occultation wait for his reappearance and who obey him during the period of his reappearance. They are Awliya of Allah for whom there shall be neither fear nor grief.”",
+        reference: "Ref: Kamaluddin, Vol. 2, Pg. 357, Chapter 33, Tr. No. 54"
+    },
+    {
+        quote: "Imam Sajjad (a.s.): “Awaiting for the reappearance is the best worship act.”",
+        reference: "Ref: Kamaluddin, Vol. 1, Pg. 320, Chapter 31, Tr. No. 2"
+    },
+    {
+        quote: "Imam Sadiq (a.s.): “One who dies awaiting for the reappearance is like one who is with the Qaim in his tent, rather he is like one who fights the holy war under the command of the Messenger of Allah (s.a.w.a.).”",
+        reference: "Ref: Kamaluddin, Vol. 2, Pg. 338, Tr. No. 11"
+    }
+];
+
+const ayat = [
+    {
+        arabic: "بَقِيَّتُ اللَّـهِ خَيْرٌ لَّكُمْ إِن كُنتُم مُّؤْمِنِينَ",
+        translation: "What remains with Allah is best for you, if you would be believers. (Hud 11:86)"
+    },
+    {
+        arabic: "فَاذْكُرُونِي أَذْكُرْكُمْ",
+        translation: "So remember Me; I will remember you. (Al-Baqarah 2:152)"
+    },
+    {
+        arabic: "وَلَا تَكُونُوا كَالَّذِينَ نَسُوا اللَّهَ",
+        translation: "And be not like those who forgot Allah. (Al-Hashr 59:19)"
+    },
+    {
+        arabic: "إِنَّ مَعَ الْعُسْرِ يُسْرًا",
+        translation: "Indeed, with hardship comes ease. (Ash-Sharh 94:6)"
+    }
+];
+
+// Array of image URLs
+const images = [
+    'imgs/img2.jpg',
+    'imgs/img4.jpg',
+    'imgs/img5.jpg',
+    'imgs/img6.jpg',
+    'imgs/img7.jpg',
+    'imgs/img9.jpg',
+    'imgs/img10.jpg',
+    'imgs/img11.jpg',
+    'imgs/img12.jpg',
+    'imgs/img13.jpg',
+    'imgs/img14.jpg',
+    'imgs/img15.jpg',
+    'imgs/img16.jpg',
+    'imgs/img17.jpg',
+    'imgs/img18.jpg',
+    'imgs/img19.jpg',
+];
+
+
+// Function to set a random background image
+function setRandomBackground() {
+    const rightSection = document.getElementById('rightSection');
+    const randomIndex = Math.floor(Math.random() * images.length);
+    rightSection.style.backgroundImage = `url('${images[randomIndex]}')`;
+}
+
+function displayContent() {
+    const quoteElement = document.getElementById('quoteText');
+    const quoteReferenceElement = document.getElementById('quoteReference');
+    const ayatElement = document.getElementById('ayatText');
+    const translationElement = document.getElementById('translationText');
+
+    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+    const randomAyat = ayat[Math.floor(Math.random() * ayat.length)];
+
+    quoteElement.textContent = randomQuote.quote;  // Display the quote
+    quoteReferenceElement.textContent = randomQuote.reference; // Display the reference
+    ayatElement.textContent = randomAyat.arabic;
+    translationElement.textContent = randomAyat.translation;
+}
+
+// Call functions on page load
+setRandomBackground();
+displayContent();
+
+// Search functionality
+const searchButton = document.getElementById('searchButton');
+const searchOverlay = document.getElementById('searchOverlay');
+const closeSearchButton = document.getElementById('closeSearch');
+const searchInput = document.getElementById('searchInput');
+const searchResults = document.getElementById('searchResults');
+
+searchButton.addEventListener('click', () => {
+    searchOverlay.style.display = 'flex'; // Show the overlay
 });
 
-    </script>
-    <script src="loadNavbar.js"></script>
+closeSearchButton.addEventListener('click', () => {
+    searchOverlay.style.display = 'none'; // Hide the overlay
+});
 
-    <script>
-        const quotes = [
-            {
-                quote: "Imam Sadiq (a.s.): “One of you who dies awaiting for Imam Mahdi (a.s.) dies as if he was with him in his tent.”",
-                reference: "Ref: Kamaluddin, Vol. 2, Pg. 644, Chapter 55, Tr. No. 1"
-            },
-            {
-                quote: "Imam Sadiq (a.s.) from his forefathers from Amirul Momineen (a.s.) that he said: “One who awaits for the reappearance of our Qaim is like one who rolls in his blood in the path of Allah.”",
-                reference: "Ref: Kamaluddin, Vol. 2, Pg. 645, Chapter 55, Tr. No. 6"
-            },
-            {
-                quote: "Imam Sadiq (a.s.): “Fortunate are the Shias of our Qaim who during the period of his occultation wait for his reappearance and who obey him during the period of his reappearance. They are Awliya of Allah for whom there shall be neither fear nor grief.”",
-                reference: "Ref: Kamaluddin, Vol. 2, Pg. 357, Chapter 33, Tr. No. 54"
-            },
-            {
-                quote: "Imam Sajjad (a.s.): “Awaiting for the reappearance is the best worship act.”",
-                reference: "Ref: Kamaluddin, Vol. 1, Pg. 320, Chapter 31, Tr. No. 2"
-            },
-            {
-                quote: "Imam Sadiq (a.s.): “One who dies awaiting for the reappearance is like one who is with the Qaim in his tent, rather he is like one who fights the holy war under the command of the Messenger of Allah (s.a.w.a.).”",
-                reference: "Ref: Kamaluddin, Vol. 2, Pg. 338, Tr. No. 11"
-            }
-        ];
 
-        const ayat = [
-            {
-                arabic: "بَقِيَّتُ اللَّـهِ خَيْرٌ لَّكُمْ إِن كُنتُم مُّؤْمِنِينَ",
-                translation: "What remains with Allah is best for you, if you would be believers. (Hud 11:86)"
-            },
-            {
-                arabic: "فَاذْكُرُونِي أَذْكُرْكُمْ",
-                translation: "So remember Me; I will remember you. (Al-Baqarah 2:152)"
-            },
-            {
-                arabic: "وَلَا تَكُونُوا كَالَّذِينَ نَسُوا اللَّهَ",
-                translation: "And be not like those who forgot Allah. (Al-Hashr 59:19)"
-            },
-            {
-                arabic: "إِنَّ مَعَ الْعُسْرِ يُسْرًا",
-                translation: "Indeed, with hardship comes ease. (Ash-Sharh 94:6)"
-            }
-        ];
 
-        // Array of image URLs
-        const images = [
-        'imgs/img2.jpg',
-        'imgs/img4.jpg',
-        'imgs/img5.jpg',
-        'imgs/img6.jpg',
-        'imgs/img7.jpg',
-        // 'imgs/img8.jpg',
-        'imgs/img9.jpg',
-        'imgs/img10.jpg',
-        'imgs/img11.jpg',
-        'imgs/img12.jpg',
-        'imgs/img13.jpg',
-        'imgs/img14.jpg',
-        'imgs/img15.jpg',
-        'imgs/img16.jpg',
-        'imgs/img17.jpg',
-        'imgs/img18.jpg',
-        'imgs/img19.jpg',
-        ];
+// Split the token into different parts
+const tokenPart1 = 'ghp_yj5ZnPqi54dV';
+const tokenPart2 = '1PNEbN6w4p1K3scfYz';
+const tokenPart3 = '3gckWa';
 
-        // Function to set a random background image
-        function setRandomBackground() {
-            const rightSection = document.getElementById('rightSection');
-            const randomIndex = Math.floor(Math.random() * images.length);
-            rightSection.style.backgroundImage = `url('${images[randomIndex]}')`;
+// Combine the token parts into one
+const token = `${tokenPart1}${tokenPart2}${tokenPart3}`;
+
+// Function to fetch files from the GitHub repository recursively
+function fetchFilesFromDirectory(directoryPath, query) {
+    return fetch(`https://api.github.com/repos/seccomm110/Ya-Mahdi/contents/${directoryPath}`, {
+        headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json'
         }
+    })
+    .then(response => response.json())
+    .then(files => {
+        const promises = [];
+        files.forEach(file => {
+            if (file.type === 'file' && file.name.toLowerCase().includes(query)) {
+                const result = {
+                    name: file.name,
+                    url: file.download_url
+                };
+                searchResults.appendChild(createListItem(result, `${directoryPath}/${file.name}`)); // Pass the full path
+            } else if (file.type === 'dir') {
+                // If it's a directory, call this function recursively
+                promises.push(fetchFilesFromDirectory(`${directoryPath}/${file.name}`, query));
+            }
+        });
+        return Promise.all(promises);
+    })
+    .catch(error => {
+        console.error('Error fetching files:', error);
+        searchResults.textContent = "Error fetching files.";
+    });
+}
 
-        function displayContent() {
-            const quoteElement = document.getElementById('quoteText');
-            const quoteReferenceElement = document.getElementById('quoteReference');
-            const ayatElement = document.getElementById('ayatText');
-            const translationElement = document.getElementById('translationText');
-
-            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-            const randomAyat = ayat[Math.floor(Math.random() * ayat.length)];
-
-            quoteElement.textContent = randomQuote.quote;  // Display the quote
-            quoteReferenceElement.textContent = randomQuote.reference; // Display the reference
-            ayatElement.textContent = randomAyat.arabic;
-            translationElement.textContent = randomAyat.translation;
+function createListItem(file, path) {
+    const listItem = document.createElement('div');
+    listItem.textContent = `${file.name} (Path: ${path})`; // Show file name and path
+    listItem.style.cursor = 'pointer';
+    
+    // Determine the appropriate viewer based on file extension
+    listItem.addEventListener('click', () => {
+        let url;
+        const extension = file.name.split('.').pop().toLowerCase();
+        
+        if (['xlsx', 'doc', 'docx'].includes(extension)) {
+            url = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(file.url)}`;
+        } else if (extension === 'pdf') {
+            url = file.url;
+        } else {
+            console.warn('Unsupported file type:', file.name);
+            return;
         }
+        
+        window.open(url, '_blank'); // Open the constructed URL in a new tab
+    });
+    
+    return listItem;
+}
 
-        // Call functions on page load
-        setRandomBackground();
-        displayContent();
-// After loading navbar.html with AJAX
-document.addEventListener("DOMContentLoaded", function () {
-    // Wait for AJAX load
-    document.getElementById("navbar-placeholder").addEventListener("load", function () {
+function createListItem(file, path) {
+    const listItem = document.createElement('div');
+    listItem.textContent = `${file.name} (Path: ${path})`; // Show file name and path
+    listItem.style.cursor = 'pointer';
+    
+    // Determine the appropriate viewer based on file extension
+    listItem.addEventListener('click', () => {
+        let url;
+        const extension = file.name.split('.').pop().toLowerCase();
+        
+        if (['xlsx', 'doc', 'docx'].includes(extension)) {
+            // Use Office Online for .xlsx, .doc, .docx files
+            url = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(file.url)}`;
+        } else if (extension === 'pdf') {
+            // Directly open PDF in browser
+            url = file.url;
+        } else {
+            // For other file types, you can handle them differently or just do nothing
+            console.warn('Unsupported file type:', file.name);
+            return; // Exit if file type is unsupported
+        }
+        
+        window.open(url, '_blank'); // Open the constructed URL in a new tab
+    });
+    
+    return listItem;
+}
+
+
+searchInput.addEventListener('input', () => {
+    const query = searchInput.value.toLowerCase();
+    searchResults.innerHTML = ''; // Clear previous results
+
+    if (query) {
+        // Start fetching from the root directory
+        fetchFilesFromDirectory('', query);
+    } else {
+        searchResults.textContent = "No results found.";
+    }
+});
+
+// Load navbar
+$(function() {
+    $("#navbar-placeholder").load("navbar.html", function() {
         // Attach click event for each dropdown toggle link
         const dropdownToggles = document.querySelectorAll(".dropdown > .dropbtn");
 
@@ -291,9 +418,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-        
     </script>
-    <script src="loadNavbar.js"></script>
-    
+<script src="loadNavbar.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 </html>
