@@ -135,6 +135,35 @@ ul li:hover {
     }
 }
 
+/* Style for the Category Dropdown */
+#categoryInput {
+    padding: 10px;
+    width: 100%;
+    max-width: 300px;
+    margin: 10px 0;
+    border: 1px solid #ff8c00;
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 16px;
+    background-color: #fff;
+    color: #333;
+    appearance: none; /* Removes default arrow for a custom look */
+}
+
+#categoryInput:focus {
+    border-color: #ffb74d;
+    outline: none;
+}
+
+
+
+.bookmark-name {
+    max-width: 250px; /* Set the max width for the name */
+    overflow-wrap: break-word; /* Wrap long words */
+    word-break: break-word;
+    white-space: normal;
+}
+
     </style>
 </head>
 <body>
@@ -143,11 +172,47 @@ ul li:hover {
     <h1>WebLink</h1>
     
     <div id="linkForm">
-        <input type="text" id="nameInput" placeholder="Enter name..." required>
-        <input type="text" id="linkInput" placeholder="Enter your favorite link..." required>
-        <textarea id="descriptionInput" placeholder="Enter description..." rows="3"></textarea>
+     
+        <!-- Category Dropdown -->
+<!-- <label for="categoryInput">Category</label> -->
+<select id="categoryInput" required>
+    <option value="" disabled selected>Enter Category...</option>
+    <option value="Tawheed">Tawheed</option>
+    <option value="Adl">Adl</option>
+    <option value="Nabuwat">Nabuwat</option>
+    <option value="Imamat">Imamat</option>
+    <option value="Maad">Maad</option>
+    <option value="Mahdaviyat">Mahdaviyat</option>
+    <option value="Tafseer e Quran">Tafseer e Quran</option>
+    <option value="Ahqaam">Ahqaam</option>
+    <option value="Dua">Dua</option>
+    <option value="Akhkaq">Akhkaq</option>
+    <option value="Munazera">Munazera</option>
+    <option value="Wilayat">Wilayat</option>
+    <option value="History">History</option>
+    <option value="Islamic Audio">Islamic Audio</option>
+    <option value="Islamic Video">Islamic Video</option>
+    <option value="Biography">Biography</option>
+    <option value="Raja't">Raja't</option>
+    <option value="Articles">Articles</option>
+    <option value="General">General</option>
+
+    <!-- Add more categories as needed -->
+</select>
+<input type="text" id="nameInput" placeholder="Enter name..." required>
+<input type="text" id="linkInput" placeholder="Enter your favorite link..." required>
+
         <input type="submit" value="Add Link" onclick="addLink()">
     </div>
+    <br>
+    <br>
+
+    <hr>
+
+    <br>
+    <br>
+    <!-- Add Search Bar for Filtering by Description -->
+     <input type="text" id="searchInput" placeholder="Search by Category..." oninput="filterBookmarks()">
 
     
     <h3 style="text-align: left; padding: 10px;">Topic</h3>
@@ -169,6 +234,22 @@ const tokenPart3 = '3gckWa';
 const token = `${tokenPart1}${tokenPart2}${tokenPart3}`;
 const filePath = 'bookmarks.json';
 
+
+   // Function to filter bookmarks based on search input
+   function filterBookmarks() {
+          const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+          const bookmarks = document.querySelectorAll('#bookmarkList li');
+
+          bookmarks.forEach(bookmark => {
+              const category = bookmark.querySelector('.bookmark-category').textContent.toLowerCase();
+              if (category.includes(searchTerm)) {
+                  bookmark.style.display = 'flex'; // Show matching bookmarks
+              } else {
+                  bookmark.style.display = 'none'; // Hide non-matching bookmarks
+              }
+          });
+      }
+
 // Function to fetch bookmarks from GitHub
 async function fetchBookmarks() {
     try {
@@ -189,26 +270,26 @@ async function fetchBookmarks() {
     }
 }
 
-// Function to add a new link with a description
+// Function to add a new link with a category
 async function addLink() {
     const nameInput = document.getElementById('nameInput');
     const linkInput = document.getElementById('linkInput');
-    const descriptionInput = document.getElementById('descriptionInput');
+    const categoryInput = document.getElementById('categoryInput');
     
     const nameValue = nameInput.value.trim();
     const linkValue = linkInput.value.trim();
-    const descriptionValue = descriptionInput.value.trim();
+    const categoryValue = categoryInput.value.trim();
 
-    if (nameValue && linkValue && descriptionValue) {
+    if (nameValue && linkValue && categoryValue) {
         const bookmarks = await getBookmarks();
-        bookmarks.push({ name: nameValue, url: linkValue, description: descriptionValue });
+        bookmarks.push({ name: nameValue, url: linkValue, category: categoryValue });
         await saveBookmarks(bookmarks);
-        addBookmarkToList({ name: nameValue, url: linkValue, description: descriptionValue });
+        addBookmarkToList({ name: nameValue, url: linkValue, category: categoryValue });
         nameInput.value = ''; 
         linkInput.value = ''; 
-        descriptionInput.value = ''; 
+        categoryInput.value = ''; 
     } else {
-        alert('Please enter a valid name, link, and description.');
+        alert('Please enter a valid name, link, and category.');
     }
 }
 
@@ -276,26 +357,33 @@ async function getBookmarks() {
     }
 }
 
-// Function to display a bookmark in the DOM
 function addBookmarkToList(bookmark) {
     const bookmarkList = document.getElementById('bookmarkList');
     const listItem = document.createElement('li');
     const index = bookmarkList.childElementCount + 1;
-    listItem.textContent = `${index}. ${bookmark.name}`;
 
-    const description = document.createElement('p');
-    description.textContent = bookmark.description;
-    description.className = 'bookmark-description';
+    // Create a span for the name with wrapping enabled
+    const nameSpan = document.createElement('span');
+    nameSpan.textContent = `${index}. ${bookmark.name}`;
+    nameSpan.className = 'bookmark-name'; // Apply the class here
 
+    // Create a paragraph for the category
+    const category = document.createElement('p');
+    category.textContent = bookmark.category;
+    category.className = 'bookmark-category';
+
+    // Create the button container
     const buttonContainer = document.createElement('div');
     buttonContainer.className = 'button-container';
 
+    // Open link button
     const openLink = document.createElement('a');
     openLink.href = bookmark.url;
     openLink.target = "_blank";
     openLink.textContent = 'Open';
     openLink.className = 'open-button';
 
+    // Copy link button
     const copyButton = document.createElement('button');
     copyButton.textContent = 'Copy';
     copyButton.className = 'copy-button';
@@ -305,6 +393,7 @@ function addBookmarkToList(bookmark) {
             .catch(err => console.error('Failed to copy link:', err));
     };
 
+    // Delete button
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Delete';
     deleteButton.className = 'delete-button';
@@ -315,32 +404,38 @@ function addBookmarkToList(bookmark) {
         bookmarkList.removeChild(listItem);
     };
 
+    // Edit button
     const editButton = document.createElement('button');
     editButton.textContent = 'Edit';
     editButton.className = 'edit-button';
     editButton.onclick = async function() {
         const newName = prompt('Edit your link name:', bookmark.name);
         const newUrl = prompt('Edit your link URL:', bookmark.url);
-        const newDescription = prompt('Edit your link description:', bookmark.description);
+        const newDescription = prompt('Edit your link category:', bookmark.category);
         if (newName && newUrl && newDescription) {
             const bookmarks = await getBookmarks();
             const updatedBookmarks = bookmarks.map(b => 
-                (b.url === bookmark.url ? { name: newName, url: newUrl, description: newDescription } : b)
+                (b.url === bookmark.url ? { name: newName, url: newUrl, category: newDescription } : b)
             );
             await saveBookmarks(updatedBookmarks);
-            listItem.firstChild.nodeValue = `${index}. ${newName}`;
-            description.textContent = newDescription;
+            nameSpan.textContent = `${index}. ${newName}`;
+            category.textContent = newDescription;
             openLink.href = newUrl;
         }
     };
 
+    // Append buttons to the button container
     buttonContainer.appendChild(openLink);
     buttonContainer.appendChild(editButton);
     buttonContainer.appendChild(deleteButton);
     buttonContainer.appendChild(copyButton);
 
-    listItem.appendChild(description);
-    listItem.appendChild(buttonContainer);
+    // Append elements to listItem
+    listItem.appendChild(nameSpan); // Append the name with wrapping
+    listItem.appendChild(category); // Append the category
+    listItem.appendChild(buttonContainer); // Append the buttons
+
+    // Append listItem to the bookmarkList
     bookmarkList.appendChild(listItem);
 }
 
