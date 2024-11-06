@@ -8,8 +8,11 @@
     <title>My Weblink</title>
     <style>
         
-        body {
+        .container {
     text-align: center;
+}
+
+body {
     margin: 20px;
     background-color: #ffffff;
     color: #333;
@@ -54,16 +57,39 @@ ul {
 li {
     margin: 10px 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     padding: 10px;
     border-radius: 5px;
 }
 
+.bookmark-category {
+    width: 120px; /* Fixed width for category */
+    margin-right: 100px; /* Space between category and name */
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+}
+
+.bookmark-name {
+    flex-grow: 1; /* Let the name take up remaining space */
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+    margin-bottom: 10px; /* Add space below the name */
+}
+
+/* Aligning the buttons to the right of the page */
 .button-container {
     display: flex;
     gap: 10px;
+    margin-top: 10px;
+    position: absolute;  /* Using absolute positioning */
+    right: 20px;         /* 20px from the right edge of the page */
+    /* top: 20px;           Adjust the top position as needed */
 }
+
+
 
 .button-container button,
 .button-container a {
@@ -135,8 +161,27 @@ ul li:hover {
     }
 }
 
+/* Style for the Search Input */
+.searchInput {
+    padding: 10px;
+    width: 100%;
+    max-width: 300px;
+    margin: 10px 0;
+    border: 1px solid #ff8c00;
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 16px;
+    background-color: #fff;
+    color: #333;
+}
+
+.searchInput:focus {
+    border-color: #ffb74d;
+    outline: none;
+}
+
 /* Style for the Category Dropdown */
-#categoryInput {
+.categoryInput {
     padding: 10px;
     width: 100%;
     max-width: 300px;
@@ -150,33 +195,70 @@ ul li:hover {
     appearance: none; /* Removes default arrow for a custom look */
 }
 
-#categoryInput:focus {
+.categoryInput:focus {
     border-color: #ffb74d;
     outline: none;
 }
 
-
-
 .bookmark-name {
-    max-width: 250px; /* Set the max width for the name */
-    overflow-wrap: break-word; /* Wrap long words */
+    max-width: 600px;
+    overflow-wrap: break-word;
     word-break: break-word;
     white-space: normal;
+    margin-bottom: 10px; /* Add space below the name */
+}
+
+.bookmark-category {
+    max-width: 100px;
+    justify-content: space-between;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+    margin-bottom: 10px; /* Add space below the category */
+}
+
+.button-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px; /* Add space above the buttons */
+}
+
+.button-container button,
+.button-container a {
+    padding: 5px 10px;
+    cursor: pointer;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: small;
+}
+
+.delete-button { background-color: #ff4d4d; }
+.edit-button { background-color: #4CAF50; }
+.copy-button { background-color: #008CBA; }
+.open-button { background-color: #ff8c00; }
+
+.delete-button:hover,
+.edit-button:hover,
+.copy-button:hover,
+.open-button:hover {
+    opacity: 0.8;
 }
 
     </style>
 </head>
 <body>
     <div id="navbar-placeholder"></div>
-
+<div class="container">
     <h1>WebLink</h1>
     
     <div id="linkForm">
      
         <!-- Category Dropdown -->
 <!-- <label for="categoryInput">Category</label> -->
-<select id="categoryInput" required>
-    <option value="" disabled selected>Enter Category...</option>
+<select id="categoryInput" class="categoryInput" required>
+    <option value="" disabled selected>Select category...</option>
     <option value="Tawheed">Tawheed</option>
     <option value="Adl">Adl</option>
     <option value="Nabuwat">Nabuwat</option>
@@ -199,23 +281,45 @@ ul li:hover {
 
     <!-- Add more categories as needed -->
 </select>
-<input type="text" id="nameInput" placeholder="Enter name..." required>
+<input type="text" id="nameInput" placeholder="Enter link description..." required>
 <input type="text" id="linkInput" placeholder="Enter your favorite link..." required>
 
         <input type="submit" value="Add Link" onclick="addLink()">
     </div>
-    <br>
-    <br>
 
-    <hr>
-
-    <br>
-    <br>
+  
     <!-- Add Search Bar for Filtering by Description -->
-     <input type="text" id="searchInput" placeholder="Search by Category..." oninput="filterBookmarks()">
-
+  
+    <!-- Category Search Dropdown for Filtering -->
+    <select id="searchCategory" class="searchInput" onchange="filterBookmarks()">
+        <option value="">Select category...</option>
+    <option value="Tawheed">Tawheed</option>
+    <option value="Adl">Adl</option>
+    <option value="Nabuwat">Nabuwat</option>
+    <option value="Imamat">Imamat</option>
+    <option value="Maad">Maad</option>
+    <option value="Mahdaviyat">Mahdaviyat</option>
+    <option value="Tafseer e Quran">Tafseer e Quran</option>
+    <option value="Ahqaam">Ahqaam</option>
+    <option value="Dua">Dua</option>
+    <option value="Akhkaq">Akhkaq</option>
+    <option value="Munazera">Munazera</option>
+    <option value="Wilayat">Wilayat</option>
+    <option value="History">History</option>
+    <option value="Islamic Audio">Islamic Audio</option>
+    <option value="Islamic Video">Islamic Video</option>
+    <option value="Biography">Biography</option>
+    <option value="Raja't">Raja't</option>
+    <option value="Articles">Articles</option>
+    <option value="General">General</option>
+        <!-- Add more categories as needed -->
+    </select>
+</div>
     
-    <h3 style="text-align: left; padding: 10px;">Topic</h3>
+<div style="display: flex;">
+    <h3><span style="margin-right: 120px;">Category</span> Topic</h3>
+  </div>
+  
     <ul id="bookmarkList"></ul>
 
 
@@ -237,18 +341,18 @@ const filePath = 'bookmarks.json';
 
    // Function to filter bookmarks based on search input
    function filterBookmarks() {
-          const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-          const bookmarks = document.querySelectorAll('#bookmarkList li');
+            const selectedCategory = document.getElementById('searchCategory').value.toLowerCase();
+            const bookmarks = document.querySelectorAll('#bookmarkList li');
 
-          bookmarks.forEach(bookmark => {
-              const category = bookmark.querySelector('.bookmark-category').textContent.toLowerCase();
-              if (category.includes(searchTerm)) {
-                  bookmark.style.display = 'flex'; // Show matching bookmarks
-              } else {
-                  bookmark.style.display = 'none'; // Hide non-matching bookmarks
-              }
-          });
-      }
+            bookmarks.forEach(bookmark => {
+                const category = bookmark.querySelector('.bookmark-category').textContent.toLowerCase();
+                if (!selectedCategory || category.includes(selectedCategory)) {
+                    bookmark.style.display = 'flex'; // Show matching bookmarks
+                } else {
+                    bookmark.style.display = 'none'; // Hide non-matching bookmarks
+                }
+            });
+        }
 
 // Function to fetch bookmarks from GitHub
 async function fetchBookmarks() {
@@ -364,13 +468,15 @@ function addBookmarkToList(bookmark) {
 
     // Create a span for the name with wrapping enabled
     const nameSpan = document.createElement('span');
-    nameSpan.textContent = `${index}. ${bookmark.name}`;
-    nameSpan.className = 'bookmark-name'; // Apply the class here
+    nameSpan.textContent = `${bookmark.name}`;
+    nameSpan.className = 'bookmark-name'; 
 
     // Create a paragraph for the category
     const category = document.createElement('p');
-    category.textContent = bookmark.category;
+    category.textContent = `${index}. ${bookmark.category}`;
+    // category.textContent = bookmark.category;
     category.className = 'bookmark-category';
+
 
     // Create the button container
     const buttonContainer = document.createElement('div');
@@ -431,8 +537,8 @@ function addBookmarkToList(bookmark) {
     buttonContainer.appendChild(copyButton);
 
     // Append elements to listItem
-    listItem.appendChild(nameSpan); // Append the name with wrapping
     listItem.appendChild(category); // Append the category
+    listItem.appendChild(nameSpan); // Append the name with wrapping
     listItem.appendChild(buttonContainer); // Append the buttons
 
     // Append listItem to the bookmarkList
