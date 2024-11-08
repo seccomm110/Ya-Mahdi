@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     
-        <link rel="stylesheet" href="style.css">
-        <link rel="stylesheet" href="a.css">
+    <link rel="stylesheet" href="style.css">
     <link sizes="64x64" rel="icon" href="../imgs/logo.png" type="image/png">
-        
+    
+    <link rel="stylesheet" href="a.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Attendance</title>
@@ -16,6 +16,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
+
 
 
     <style>
@@ -42,16 +43,17 @@
         <div id="viewer" style="display: none;"> 
             <canvas id="canvas"></canvas>
         </div>
+        
         <div class="pdf-controls">
-            <button id="prev-page" style="display:none;"></button>
+            <button id="prev-page" style="display: none;"></button>
             <span> <span id="page-num"></span> <span id="page-count"></span></span>
-            <button id="next-page" style="display:none;"></button>
+            <button id="next-page" style="display: none;"></button>
         </div>
     </div>
-    
     <button id="logoutButton" style="position: fixed; bottom: 20px; left: 20px; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
         Logout
     </button>
+
     <script src="loadNavbar.js"></script>
 
 </body>
