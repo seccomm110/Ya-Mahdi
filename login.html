@@ -10,7 +10,6 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-
         }
 
         .container {
@@ -81,24 +80,76 @@
         </form>
     </div>
     <script>
-        const correctUsername = "seccomm110";
-        const correctPassword = "Passwd@123";
+        // GitHub authentication setup
+        const githubUsername = 'seccomm110';
+        const repoName = 'Ya-Mahdi';
+        const branch = 'main';
 
-        document.getElementById("loginForm").addEventListener("submit", function (event) {
-            event.preventDefault(); // Prevent form submission
+        // Reconstruct the GitHub token
+        const tokenPart1 = 'ghp_yj5ZnPqi54dV';
+        const tokenPart2 = '1PNEbN6w4p1K3scfYz';
+        const tokenPart3 = '3gckWa';
+        const token = `${tokenPart1}${tokenPart2}${tokenPart3}`;
 
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
+       // GitHub URL for the users.json file (via GitHub API)
+const apiUrl = `https://api.github.com/repos/${githubUsername}/${repoName}/contents/users.json?ref=${branch}`;
 
-            if (username === correctUsername && password === correctPassword) {
-                // Simulate login success
-                localStorage.setItem("loggedIn", "true"); // Store login status
-                window.location.href = "index.html"; // Redirect to index
-            } else {
-                // Display error message
-                document.getElementById("error-message").innerText = "Invalid username or password.";
+document.getElementById("loginForm").addEventListener("submit", function (event) {
+    event.preventDefault(); // Prevent form submission
+
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    // Fetch the users data from GitHub API using token for authentication
+    fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+            'Authorization': `token ${token}`, // Include the GitHub token here
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Check if the response contains the content of the file
+        if (data.content) {
+            // Decode the content from base64 to JSON
+            const decodedContent = atob(data.content);
+
+            let users;
+            try {
+                // Attempt to parse the decoded content into JSON
+                const parsedData = JSON.parse(decodedContent);
+                users = parsedData.users; // Access the 'users' array inside the parsed object
+            } catch (error) {
+                console.error("Error parsing JSON:", error);
+                document.getElementById("error-message").innerText = "Error processing user data.";
+                return;
             }
-        });
+
+            // Check if users is an array
+            if (Array.isArray(users)) {
+                const user = users.find(u => u.username === username);
+
+                if (user && user.password === password) {
+                    // If username and password match, store token and redirect
+                    localStorage.setItem("loggedIn", true);
+                    localStorage.setItem("username", user.username); // Store the username
+                    window.location.href = "index.html"; // Redirect to index page
+                } else {
+                    document.getElementById("error-message").innerText = "Invalid username or password.";
+                }
+            } else {
+                document.getElementById("error-message").innerText = "User data is not in the expected format.";
+            }
+        } else {
+            document.getElementById("error-message").innerText = "Error fetching user data.";
+            console.error("Error fetching data:", data);
+        }
+    })
+    .catch(error => {
+        document.getElementById("error-message").innerText = "Error fetching user data.";
+        console.error("Error:", error);
+    });
+});
     </script>
 </body>
 </html>

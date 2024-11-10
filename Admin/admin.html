@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-section Page</title>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="css/list_and_ids.css">
+    <style>
+
+    </style>
+</head>
+<body>
+
+    <!-- Horizontal Navigation Bar -->
+    <nav class="horizontal-nav">
+        <ul>
+            <li><a href="#section1">Create Users</a></li>
+            <li><a href="#section2">Delete Users</a></li>
+            <li><a href="#section3">Section 3</a></li>
+            <li><a href="#section4">Audit Logs</a></li>
+        </ul>
+    </nav>
+
+    <!-- Sections -->
+    <section id="section1">
+     
+    
+        <!-- <h1>Create New User</h1> -->
+        <form id="createUserForm">
+            <label for="username">Username:</label><br>
+            <input type="text" id="username" name="username" required><br><br>
+    
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password" required><br><br>
+    
+            <button type="submit">Create User</button>
+        </form>
+    
+        <div id="statusMessage"></div>
+    
+        <script>
+ 
+        </script>
+
+
+    </section>
+
+
+    <section id="section2">
+        <!-- <h1>Manage Users</h1> -->
+        <div id="userTableContainer">
+            <table id="userTable">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    <!-- Users will be dynamically added here -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+    
+
+
+
+
+    <section id="section3">
+        <h2>Section 3</h2>
+        <p>This is the content of section 3.</p>
+    </section>
+
+    <section id="section4">
+        <h2>Section 4</h2>
+        <p>This is the content of section 4.</p>
+    </section>
+
+    <script src="admin.js"></script>
+    <script src="js/section1.js"></script>
+    <script src="js/section2.js"></script>
+    <script>
+     
+    </script>
+</body>
+</html>

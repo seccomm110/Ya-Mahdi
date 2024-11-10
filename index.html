@@ -135,11 +135,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ya Mahdi</title>
     <script>
-        // Redirect to login if not logged in
-        if (!localStorage.getItem("loggedIn")) {
-            window.location.href = "login.html";
-        }
+       // Only proceed if user is logged in
+if (localStorage.getItem("loggedIn")) {
+
+    // Call function to update log file
+    updateLogFile();
+} else {
+    // Redirect to login page if not logged in
+    window.location.href = "login.html";
+}
+
     </script>
+
+    
     
 </head>
 <body>
@@ -421,5 +429,6 @@ $(function() {
     </script>
 <script src="loadNavbar.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="log.js"></script>
 </body>
 </html>

@@ -1,0 +1,134 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Horizontal Navigation Bar Styling */
+.horizontal-nav {
+    display: flex;
+    justify-content: center;
+    background-color: #333;
+    padding: 10px 0;
+}
+
+.horizontal-nav ul {
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
+}
+
+.horizontal-nav li a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s, border-bottom 0.3s;
+}
+
+.horizontal-nav li a.active {
+    border-bottom: 2px solid white; /* White underline for active link */
+}
+
+.horizontal-nav li a:hover {
+    background-color: #555;
+}
+
+/* Section Styling */
+section {
+    padding: 60px;
+    min-height: 100vh;
+    display: none; /* Hide sections by default */
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    transition: background-color 0.5s;
+}
+
+#section1 { background-color: #f2f2f2; }
+#section2 { background-color: #e6e6e6; display: flex; flex-direction: column; align-items: center; }
+#section3 { background-color: #cccccc; }
+#section4 { background-color: #b3b3b3; }
+
+section.active {
+    display: flex; /* Show only the active section */
+}
+
+/* Table Styling */
+#userTableContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+#userTable {
+    width: 80%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+#userTable th, #userTable td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+#userTable th {
+    background-color: #f2f2f2;
+}
+
+button {
+    margin-right: 10px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Add some space between rows and hover effect for table rows */
+#userTable tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Styling for Edit and Delete Buttons */
+button.edit-btn {
+    background-color: #ffa500; /* Orange for edit button */
+}
+
+button.edit-btn:hover {
+    background-color: #e68a00;
+}
+
+button.delete-btn {
+    background-color: #f44336; /* Red for delete button */
+}
+
+button.delete-btn:hover {
+    background-color: #d32f2f;
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+    #userTable {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    #userTable th, #userTable td {
+        padding: 8px;
+    }
+
+    button {
+        padding: 5px;
+        font-size: 14px;
+    }
+}
