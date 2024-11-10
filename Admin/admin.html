@@ -81,20 +81,11 @@
 <div id="content">Loading...</div>
 
 <script>
-    async function fetchTextFileWithToken() {
+    async function fetchTextFile() {
         const url = 'https://raw.githubusercontent.com/seccomm110/Ya-Mahdi/main/Admin/log.txt';
-       // Reconstruct the token
-       const tokenPart1 = 'ghp_yj5ZnPqi54dV';
-    const tokenPart2 = '1PNEbN6w4p1K3scfYz';
-    const tokenPart3 = '3gckWa';
-    const token = `${tokenPart1}${tokenPart2}${tokenPart3}`;
 
         try {
-            const response = await fetch(url, {
-                headers: {
-                    'Authorization': `token ${token}`
-                }
-            });
+            const response = await fetch(url);
             if (!response.ok) {
                 throw new Error(`Error fetching file: ${response.statusText}`);
             }
@@ -106,7 +97,7 @@
     }
 
     // Fetch the file on page load
-    fetchTextFileWithToken();
+    fetchTextFile();
 </script>
 
     </section>
@@ -114,7 +105,7 @@
     <script src="admin.js"></script>
     <script src="js/section1.js"></script>
     <script src="js/section2.js"></script>
-    <script src="../log.js"></script>
+    <script src="js/log.js"></script>
     <script>
      
     </script>

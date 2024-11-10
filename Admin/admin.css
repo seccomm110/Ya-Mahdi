@@ -107,4 +107,8 @@ table th {
     font-family: monospace;
     white-space: pre-wrap;
     word-wrap: break-word;
+    height: 400px; /* Set the height you want */
+    overflow: auto; /* This will add the scroll bar when content overflows */
+    border: 1px solid #ddd; /* Optional: Adds border to make the section more distinct */
+    padding: 10px; /* Optional: Adds padding for better readability */
 }
