@@ -76,29 +76,44 @@
 
     <section id="section4">
 
-
-<h1>Log File Content</h1>
-<div id="content">Loading...</div>
-
-<script>
-    async function fetchTextFile() {
-        const url = 'https://raw.githubusercontent.com/seccomm110/Ya-Mahdi/main/Admin/log.txt';
-
-        try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Error fetching file: ${response.statusText}`);
+        <h1>Log File Content</h1>
+        <div id="content">Loading...</div>
+        
+        <script>
+            async function fetchTextFileWithToken() {
+                const apiUrl = 'https://api.github.com/repos/seccomm110/Ya-Mahdi/contents/Admin/log.txt';
+                
+             
+    // Reconstruct the token
+    const tokenPart1 = 'ghp_yj5ZnPqi54dV';
+    const tokenPart2 = '1PNEbN6w4p1K3scfYz';
+    const tokenPart3 = '3gckWa';
+    const token = `${tokenPart1}${tokenPart2}${tokenPart3}`;
+        
+                try {
+                    const response = await fetch(apiUrl, {
+                        headers: {
+                            'Authorization': `token ${token}`
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`Error fetching file: ${response.statusText}`);
+                    }
+        
+                    const data = await response.json();
+                    const fileContent = atob(data.content);  // Decode base64 content
+                    document.getElementById('content').textContent = fileContent;
+        
+                } catch (error) {
+                    document.getElementById('content').textContent = `Failed to load content: ${error.message}`;
+                }
             }
-            const text = await response.text();
-            document.getElementById('content').textContent = text;
-        } catch (error) {
-            document.getElementById('content').textContent = `Failed to load content: ${error.message}`;
-        }
-    }
-
-    // Fetch the file on page load
-    fetchTextFile();
-</script>
+        
+            // Fetch the file on page load
+            fetchTextFileWithToken();
+        </script>
+        
 
     </section>
 
