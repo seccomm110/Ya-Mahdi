@@ -1,134 +1,110 @@
-/* Basic Reset */
-* {
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
-/* Horizontal Navigation Bar Styling */
-.horizontal-nav {
-    display: flex;
-    justify-content: center;
+nav.horizontal-nav {
     background-color: #333;
     padding: 10px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
-.horizontal-nav ul {
-    list-style-type: none;
+nav.horizontal-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: flex;
-    gap: 20px;
+    justify-content: center;
 }
 
-.horizontal-nav li a {
+nav.horizontal-nav ul li {
+    margin: 0 15px;
+}
+
+nav.horizontal-nav ul li a {
     color: white;
     text-decoration: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    transition: background-color 0.3s, border-bottom 0.3s;
+    font-size: 18px;
 }
 
-.horizontal-nav li a.active {
-    border-bottom: 2px solid white; /* White underline for active link */
+nav.horizontal-nav ul li a:hover {
+    color: #f39c12;
 }
 
-.horizontal-nav li a:hover {
-    background-color: #555;
-}
-
-/* Section Styling */
+/* Section Styles */
 section {
-    padding: 60px;
-    min-height: 100vh;
-    display: none; /* Hide sections by default */
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
-    transition: background-color 0.5s;
-}
-
-#section1 { background-color: #f2f2f2; }
-#section2 { background-color: #e6e6e6; display: flex; flex-direction: column; align-items: center; }
-#section3 { background-color: #cccccc; }
-#section4 { background-color: #b3b3b3; }
-
-section.active {
-    display: flex; /* Show only the active section */
-}
-
-/* Table Styling */
-#userTableContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     padding: 20px;
+    margin: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
 }
 
-#userTable {
-    width: 80%;
-    margin-top: 20px;
+#section1, #section2, #section3, #section4 {
+    background-color: #f9f9f9;
+}
+
+/* Form Styles */
+form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+form label {
+    font-size: 16px;
+}
+
+form input {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #45a049;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
     border-collapse: collapse;
+    margin-top: 20px;
 }
 
-#userTable th, #userTable td {
-    padding: 12px;
+table th, table td {
+    padding: 10px;
     border: 1px solid #ddd;
     text-align: left;
 }
 
-#userTable th {
+table th {
     background-color: #f2f2f2;
 }
 
-button {
-    margin-right: 10px;
-    padding: 5px 10px;
-    border: none;
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
-    border-radius: 3px;
+/* Status Message Styles */
+#statusMessage {
+    margin-top: 20px;
+    font-size: 18px;
+    color: green;
 }
 
-button:hover {
-    background-color: #45a049;
-}
-
-/* Add some space between rows and hover effect for table rows */
-#userTable tr:hover {
-    background-color: #f1f1f1;
-}
-
-/* Styling for Edit and Delete Buttons */
-button.edit-btn {
-    background-color: #ffa500; /* Orange for edit button */
-}
-
-button.edit-btn:hover {
-    background-color: #e68a00;
-}
-
-button.delete-btn {
-    background-color: #f44336; /* Red for delete button */
-}
-
-button.delete-btn:hover {
-    background-color: #d32f2f;
-}
-
-/* Responsive Table */
-@media (max-width: 768px) {
-    #userTable {
-        width: 100%;
-        font-size: 14px;
-    }
-
-    #userTable th, #userTable td {
-        padding: 8px;
-    }
-
-    button {
-        padding: 5px;
-        font-size: 14px;
-    }
+/* Log Section */
+#content {
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }

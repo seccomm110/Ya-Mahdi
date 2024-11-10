@@ -1,33 +1,35 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const navLinks = document.querySelectorAll(".horizontal-nav a");
-    const sections = document.querySelectorAll("section");
-
-    // Function to handle navigation click
-    function handleNavClick(event) {
-        event.preventDefault(); // Prevent default link behavior
-
-        // Hide all sections
-        sections.forEach(section => section.classList.remove("active"));
-
-        // Remove active class from all nav links
-        navLinks.forEach(link => link.classList.remove("active"));
-
-        // Show the clicked section
-        const targetSection = document.querySelector(event.target.getAttribute("href"));
-        targetSection.classList.add("active");
-
-        // Add active class to the clicked nav link
-        event.target.classList.add("active");
-    }
-
-    // Add click event listeners to all nav links
-    navLinks.forEach(link => {
-        link.addEventListener("click", handleNavClick);
+document.addEventListener('DOMContentLoaded', function () {
+    // Initially hide all sections except the first one
+    const sections = document.querySelectorAll('section');
+    sections.forEach((section) => {
+        section.style.display = 'none';
     });
 
-    // Optionally, you can trigger a click on the first link to show the first section by default
-    navLinks[0].click();
+    // Function to show a specific section and hide others
+    function showSection(sectionId) {
+        sections.forEach((section) => {
+            // Hide all sections
+            section.style.display = 'none';
+        });
+
+        // Show the selected section
+        const selectedSection = document.getElementById(sectionId);
+        if (selectedSection) {
+            selectedSection.style.display = 'block';
+        }
+    }
+
+    // Event listeners for navigation links to show the relevant section
+    const navLinks = document.querySelectorAll('.horizontal-nav a');
+    navLinks.forEach((link) => {
+        link.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent default anchor behavior
+
+            const sectionId = link.getAttribute('href').substring(1); // Get section ID from href (e.g., #section1)
+            showSection(sectionId);
+        });
+    });
+
+    // Show the first section by default
+    showSection('section1');
 });
-
-
-

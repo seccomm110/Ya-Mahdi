@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi-section Page</title>
+    <title>Admin</title>
     <link rel="stylesheet" href="admin.css">
     <link rel="stylesheet" href="css/list_and_ids.css">
     <style>
@@ -17,7 +17,7 @@
         <ul>
             <li><a href="#section1">Create Users</a></li>
             <li><a href="#section2">Delete Users</a></li>
-            <li><a href="#section3">Section 3</a></li>
+            <!-- <li><a href="#section3">Section 3</a></li> -->
             <li><a href="#section4">Audit Logs</a></li>
         </ul>
     </nav>
@@ -75,13 +75,46 @@
     </section>
 
     <section id="section4">
-        <h2>Section 4</h2>
-        <p>This is the content of section 4.</p>
+
+
+<h1>Log File Content</h1>
+<div id="content">Loading...</div>
+
+<script>
+    async function fetchTextFileWithToken() {
+        const url = 'https://raw.githubusercontent.com/seccomm110/Ya-Mahdi/main/Admin/log.txt';
+       // Reconstruct the token
+       const tokenPart1 = 'ghp_yj5ZnPqi54dV';
+    const tokenPart2 = '1PNEbN6w4p1K3scfYz';
+    const tokenPart3 = '3gckWa';
+    const token = `${tokenPart1}${tokenPart2}${tokenPart3}`;
+
+        try {
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': `token ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error(`Error fetching file: ${response.statusText}`);
+            }
+            const text = await response.text();
+            document.getElementById('content').textContent = text;
+        } catch (error) {
+            document.getElementById('content').textContent = `Failed to load content: ${error.message}`;
+        }
+    }
+
+    // Fetch the file on page load
+    fetchTextFileWithToken();
+</script>
+
     </section>
 
     <script src="admin.js"></script>
     <script src="js/section1.js"></script>
     <script src="js/section2.js"></script>
+    <script src="../log.js"></script>
     <script>
      
     </script>

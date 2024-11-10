@@ -134,18 +134,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ya Mahdi</title>
-    <script>
-       // Only proceed if user is logged in
-if (localStorage.getItem("loggedIn")) {
 
-    // Call function to update log file
-    updateLogFile();
-} else {
-    // Redirect to login page if not logged in
-    window.location.href = "login.html";
-}
-
-    </script>
+   
 
     
     
@@ -186,6 +176,14 @@ if (localStorage.getItem("loggedIn")) {
     <button id="logoutButton" style="position: fixed; bottom: 20px; left: 20px; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
         Logout
     </button>
+
+    <script>
+              // Logout function
+      document.getElementById("logoutButton").addEventListener("click", function() {
+    localStorage.removeItem("loggedIn"); // Clear login status
+    window.location.href = "https://seccomm110.github.io/Ya-Mahdi/login.html";  // Redirect to login page
+});
+    </script>
 
     <div id="searchOverlay">
         <div id="searchContainer">
@@ -426,9 +424,14 @@ $(function() {
     });
 });
 
+
+
+
+
     </script>
 <script src="loadNavbar.js"></script>
+<script src="log.js"></script>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="log.js"></script>
 </body>
 </html>
