@@ -25,14 +25,14 @@ if (localStorage.getItem("username") === "admin") {
 
     <style>
 /* Hide delete button in other sections */
-#section1 .delete-btn,
-#section2 .delete-btn,
-#section3 .delete-btn {
+#section1 .delete-btn1,
+#section2 .delete-btn1,
+#section3 .delete-btn1 {
     display: none;
 }
 
            /* Circle button styling */
-           .delete-btn {
+           .delete-btn1 {
             position: fixed;
             bottom: 20px;
             right: 20px;
@@ -51,7 +51,7 @@ if (localStorage.getItem("username") === "admin") {
         }
 
         /* Optional: Hover effect */
-        .delete-btn:hover {
+        .delete-btn1:hover {
             background-color: darkred;
         }
         
@@ -197,7 +197,7 @@ if (localStorage.getItem("username") === "admin") {
 
     <section id="section4">
         <!-- Circular Delete Button -->
-    <button class="delete-btn" onclick="deleteLogContent()">🗑️</button>
+    <button class="delete-btn1" onclick="deleteLogContent()">🗑️</button>
         <h1>Log File Content</h1>
         <!-- <div id="content">Loading...</div> -->
 
