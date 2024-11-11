@@ -15,7 +15,7 @@ function loadNavbar() {
       if (localStorage.getItem('username') === 'admin') {
         // Show admin link and upload icon for admin users
         document.getElementById('admin-link').style.display = 'block';
-        document.getElementById('upload-icon').style.display = 'block';
+        // document.getElementById('upload-icon').style.display = 'block';
       } else {
         // Hide admin link and upload icon for non-admin users
         document.getElementById('admin-link').style.display = 'none';
