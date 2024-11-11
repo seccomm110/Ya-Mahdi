@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () { 
     const githubUsername = 'seccomm110';  // Replace with your GitHub username
     const repoName = 'Ya-Mahdi';          // Replace with your repository name
     const branch = 'main';                // Replace with the branch (e.g., 'main')
@@ -49,9 +49,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const userTableBody = document.getElementById("userTableBody");
         userTableBody.innerHTML = "";  // Clear current table rows
 
-        users.forEach(user => {
+        users.forEach((user, index) => {
             const row = document.createElement("tr");
             row.innerHTML = `
+                <td>${index + 1}</td>  <!-- Serial number starts from 1 -->
                 <td>${user.username}</td>
                 <td>${user.password}</td>
                 <td>

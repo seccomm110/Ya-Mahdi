@@ -73,5 +73,5 @@ if (localStorage.getItem("loggedIn")) {
     updateLogFile();
 } else {
     // Redirect to login page if not logged in
-    window.location.href = "https://seccomm110.github.io/Ya-Mahdi/login.html";
+    window.location.href = "login.html";
 }

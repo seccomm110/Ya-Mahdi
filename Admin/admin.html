@@ -6,24 +6,133 @@
     <title>Admin</title>
     <link rel="stylesheet" href="admin.css">
     <link rel="stylesheet" href="css/list_and_ids.css">
-    <style>
 
-    </style>
+
+
+
+
+    <script>
+        // Check if username in localStorage is "admin"
+if (localStorage.getItem("username") === "admin") {
+} else {
+    // User is not admin, redirect to index.html
+    window.location.href = "https://seccomm110.github.io/Ya-Mahdi/";
+}
+
+    </script>
+
+
+
+    <style>
+/* Hide delete button in other sections */
+#section1 .delete-btn,
+#section2 .delete-btn,
+#section3 .delete-btn {
+    display: none;
+}
+
+           /* Circle button styling */
+           .delete-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background-color: rgb(0, 0, 0);
+            color: white;
+            border: 2px solid black;
+            border-radius: 50%;
+            font-size: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Optional: Hover effect */
+        .delete-btn:hover {
+            background-color: darkred;
+        }
+        
+  /* Table Styles */
+  #logTable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        #logTable th, #logTable td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        #logTable th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #logTable tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #logTable tr:hover {
+            background-color: #ddd;
+        }
+
+        /* Excel-like grid lines */
+        .excel-style-table {
+            display: table;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+
+        .excel-style-table .row {
+            display: table-row;
+        }
+
+        .excel-style-table .cell {
+            display: table-cell;
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .excel-style-table .header {
+            font-weight: bold;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            #logTable, .excel-style-table {
+                font-size: 14px;
+            }
+        }
+        </style>
+    </script>
+    
 </head>
 <body>
 
     <!-- Horizontal Navigation Bar -->
     <nav class="horizontal-nav">
         <ul>
-            <li><a href="#section1">Create Users</a></li>
-            <li><a href="#section2">Delete Users</a></li>
+            <li><a href="#section1">Users</a></li>
+            <li><a href="#section2">Add Users</a></li>
             <!-- <li><a href="#section3">Section 3</a></li> -->
             <li><a href="#section4">Audit Logs</a></li>
         </ul>
     </nav>
 
     <!-- Sections -->
-    <section id="section1">
+    <section id="section2">
      
     
         <!-- <h1>Create New User</h1> -->
@@ -47,12 +156,13 @@
     </section>
 
 
-    <section id="section2">
-        <!-- <h1>Manage Users</h1> -->
+    <section id="section1">
+        <h1>Manage Users</h1>
         <div id="userTableContainer">
             <table id="userTable">
                 <thead>
                     <tr>
+                        <th>Sr. No.</th>
                         <th>Username</th>
                         <th>Password</th>
                         <th>Actions</th>
@@ -65,6 +175,7 @@
         </div>
     </section>
     
+    
 
 
 
@@ -74,47 +185,139 @@
         <p>This is the content of section 3.</p>
     </section>
 
-    <section id="section4">
+  
+    
 
+
+
+
+
+
+
+
+    <section id="section4">
+        <!-- Circular Delete Button -->
+    <button class="delete-btn" onclick="deleteLogContent()">🗑️</button>
         <h1>Log File Content</h1>
-        <div id="content">Loading...</div>
-        
+        <!-- <div id="content">Loading...</div> -->
+
+        <div id="logTableContainer">
+            <!-- Excel-like table will be populated here -->
+            <div class="excel-style-table" id="excelLogTable"></div>
+        </div>
+
         <script>
             async function fetchTextFileWithToken() {
                 const apiUrl = 'https://api.github.com/repos/seccomm110/Ya-Mahdi/contents/Admin/log.txt';
-                
-             
-    // Reconstruct the token
-    const tokenPart1 = 'ghp_yj5ZnPqi54dV';
-    const tokenPart2 = '1PNEbN6w4p1K3scfYz';
-    const tokenPart3 = '3gckWa';
-    const token = `${tokenPart1}${tokenPart2}${tokenPart3}`;
-        
+                const tokenPart1 = 'ghp_yj5ZnPqi54dV';
+                const tokenPart2 = '1PNEbN6w4p1K3scfYz';
+                const tokenPart3 = '3gckWa';
+                const token = `${tokenPart1}${tokenPart2}${tokenPart3}`;
+
                 try {
                     const response = await fetch(apiUrl, {
                         headers: {
                             'Authorization': `token ${token}`
                         }
                     });
-                    
+
                     if (!response.ok) {
                         throw new Error(`Error fetching file: ${response.statusText}`);
                     }
-        
+
                     const data = await response.json();
                     const fileContent = atob(data.content);  // Decode base64 content
-                    document.getElementById('content').textContent = fileContent;
-        
+
+                    // Split the content by newline to process each log entry
+                    const logEntries = fileContent.split('\n').reverse().map(entry => {
+                        // Regular expression to match the log format
+                        const regex = /\[(.*?)\] \[(.*?)\] \[(.*?)\]/;
+                        const match = entry.match(regex);
+
+                        if (match) {
+                            const timestamp = match[1];  // Extract timestamp
+                            const username = match[2];   // Extract username
+                            const pageTitle = match[3];  // Extract page title
+
+                            // Create a new table row with the extracted information
+                            return `
+                                <div class="row">
+                                    <div class="cell">${timestamp || 'N/A'}</div>
+                                    <div class="cell">${username || 'N/A'}</div>
+                                    <div class="cell">${pageTitle || 'N/A'}</div>
+                                </div>
+                            `;
+                        }
+                        return ''; // If the entry doesn't match the pattern, skip it
+                    }).filter(row => row !== '').join('');  // Remove any empty entries
+
+                    // Create the table header
+                    const header = `
+                        <div class="row header">
+                            <div class="cell">Timestamp</div>
+                            <div class="cell">Username</div>
+                            <div class="cell">Page Title</div>
+                        </div>
+                    `;
+
+                    // Display the header and the content rows
+                    document.getElementById('excelLogTable').innerHTML = header + logEntries;
                 } catch (error) {
                     document.getElementById('content').textContent = `Failed to load content: ${error.message}`;
                 }
             }
-        
-            // Fetch the file on page load
-            fetchTextFileWithToken();
-        </script>
-        
 
+            // Fetch the log file on page load
+            fetchTextFileWithToken();
+
+
+
+                // Replace 'YOUR_TOKEN' with your actual GitHub token and 'YOUR_REPO' with your repo details
+        const repo = 'seccomm110/Ya-Mahdi';
+        const path = 'Admin/log.txt';
+
+        function deleteLogContent() {
+            fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `token ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.sha) {
+                    // Proceed to update the file content (set to empty string)
+                    const updateData = {
+                        message: 'Clear log.txt content',
+                        sha: data.sha,
+                        content: '', // Empty content
+                    };
+
+                    fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `token ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(updateData)
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.commit) {
+                            alert('Log content cleared successfully');
+                        } else {
+                            alert('Failed to clear log content');
+                        }
+                    });
+                } else {
+                    alert('Failed to fetch file');
+                }
+            })
+            .catch(err => {
+                alert('Error: ' + err.message);
+            });
+        }
+        </script>
     </section>
 
     <script src="admin.js"></script>

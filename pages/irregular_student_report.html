@@ -4,7 +4,8 @@
     <link rel="stylesheet" href="a.css">
     <link rel="stylesheet" href="style.css">
     <link sizes="64x64" rel="icon" href="../imgs/logo.png" type="image/png">
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Article</title>
@@ -57,6 +58,18 @@
     <script src="log.js"></script>
 
     <script src="loadNavbar.js"></script>
-
+    <script>
+        // Check if the user is admin
+        window.onload = function() {
+          // Debugging: Check if username exists in localStorage
+          console.log("Username in localStorage: ", localStorage.getItem('username'));
+    
+          if (localStorage.getItem('username') === 'admin') {
+              // Show the admin and upload icon if the user is admin
+              document.getElementById('admin-link').style.display = 'block';
+              // document.getElementById('upload-icon').style.display = 'block';
+          }
+      }
+    </script>
 </body>
 </html>

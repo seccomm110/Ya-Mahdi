@@ -54,6 +54,19 @@
         Logout
     </button>
 
+    <script>
+        // Check if the user is admin
+        window.onload = function() {
+          // Debugging: Check if username exists in localStorage
+          console.log("Username in localStorage: ", localStorage.getItem('username'));
+    
+          if (localStorage.getItem('username') === 'admin') {
+              // Show the admin and upload icon if the user is admin
+              document.getElementById('admin-link').style.display = 'block';
+              // document.getElementById('upload-icon').style.display = 'block';
+          }
+      }
+    </script>
     <script src="loadNavbar.js"></script>
 <script src="log.js"></script>
 
