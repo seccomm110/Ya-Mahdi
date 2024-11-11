@@ -8,14 +8,27 @@ function loadNavbar() {
 
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
+      // Inject the navbar content into the placeholder
       document.getElementById('navbar-placeholder').innerHTML = xhr.responseText;
+
+      // Perform admin check after the navbar is loaded
+      if (localStorage.getItem('username') === 'admin') {
+        // Show admin link and upload icon for admin users
+        document.getElementById('admin-link').style.display = 'block';
+        document.getElementById('upload-icon').style.display = 'block';
+      } else {
+        // Hide admin link and upload icon for non-admin users
+        document.getElementById('admin-link').style.display = 'none';
+        document.getElementById('upload-icon').style.display = 'none';
+      }
     }
   };
 
+  // Send the request to load the navbar
   xhr.send();
 }
 
-// Call loadNavbar when DOM is ready
+// Call loadNavbar when the DOM is ready
 document.addEventListener("DOMContentLoaded", loadNavbar);
 
 // Toggle Sidebar Function

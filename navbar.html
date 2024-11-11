@@ -15,6 +15,7 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <ul>
+            <li id="admin-link" style="display: none;"><a href="https://seccomm110.github.io/Ya-Mahdi/Admin/admin.html">Admin</a></li>
             <li><a href="https://seccomm110.github.io/Ya-Mahdi/">Home</a></li>
             <li><a href="https://seccomm110.github.io/Ya-Mahdi/pages/attendance.html">Attendance</a></li>
             <li><a target="_blank" href="https://view.officeapps.live.com/op/view.aspx?src=https://raw.githubusercontent.com/seccomm110/Ya-Mahdi/main/all/Followup.xlsx">Follow up</a></li>
@@ -92,5 +93,18 @@
     </div>
     <script src="loadNavbar.js"></script>
     <script src="/js/fileViewer.js" type="module"></script>
+    <script>
+          // Check if the user is admin
+          window.onload = function() {
+            // Debugging: Check if username exists in localStorage
+            console.log("Username in localStorage: ", localStorage.getItem('username'));
+
+            if (localStorage.getItem('username') === 'admin') {
+                // Show the admin and upload icon if the user is admin
+                document.getElementById('admin-link').style.display = 'block';
+                document.getElementById('upload-icon').style.display = 'block';
+            }
+        }
+    </script>
 </body>
 </html>

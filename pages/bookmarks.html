@@ -509,7 +509,6 @@ async function getBookmarks() {
 
 
 
-
 function addBookmarkToList(bookmark) {
     const bookmarkList = document.getElementById('bookmarkList');
     const listItem = document.createElement('li');
@@ -546,107 +545,115 @@ function addBookmarkToList(bookmark) {
             .catch(err => console.error('Failed to copy link:', err));
     };
 
-    // Delete button
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = '⚔️';
-    deleteButton.className = 'delete-button';
-    deleteButton.onclick = async function() {
-        const bookmarks = await getBookmarks();
-        const updatedBookmarks = bookmarks.filter(b => b.url !== bookmark.url);
-        await saveBookmarks(updatedBookmarks);
-        bookmarkList.removeChild(listItem);
-    };
+    // Retrieve the logged-in username from localStorage
+    const loggedInUsername = localStorage.getItem("username");
 
-    // Edit button to open modal
-    const editButton = document.createElement('button');
-    editButton.textContent = '✏️';
-    editButton.className = 'edit-button';
-    editButton.onclick = function() {
-        // Create the modal container
-        const modal = document.createElement('div');
-        modal.className = 'modal';
-        
-        // Create modal content
-        const modalContent = document.createElement('div');
-        modalContent.className = 'modal-content';
-        
-        // Name input
-        const nameInput = document.createElement('input');
-        nameInput.type = 'text';
-        nameInput.value = bookmark.name;
-        nameInput.placeholder = 'Edit bookmark name';
-
-        // URL input
-        const urlInput = document.createElement('input');
-        urlInput.type = 'url';
-        urlInput.value = bookmark.url;
-        urlInput.placeholder = 'Edit bookmark URL';
-
-        // Category dropdown
-        const categories = [
-            "Tawheed", "Adl", "Nabuwat", "Imamat", "Maad", "Mahdaviyat", "Tafseer e Quran",
-            "Ahqaam", "Dua", "Akhkaq", "Munazera", "Wilayat", "History", "Islamic Audio",
-            "Islamic Video", "Biography", "Raja't", "Articles", "Shia Books", "Manaqib e Ahlebait", "Hadees", "General"
-        ];
-        const select = document.createElement('select');
-        categories.forEach(option => {
-            const optionElement = document.createElement('option');
-            optionElement.value = option;
-            optionElement.textContent = option;
-            select.appendChild(optionElement);
-        });
-        select.value = bookmark.category;
-
-        // Submit button
-        const submitButton = document.createElement('button');
-        submitButton.textContent = 'Save';
-        submitButton.onclick = async function() {
-            const newName = nameInput.value;
-            const newUrl = urlInput.value;
-            const newCategory = select.value;
-
-            if (newName && newUrl && newCategory) {
-                const bookmarks = await getBookmarks();
-                const updatedBookmarks = bookmarks.map(b => 
-                    (b.url === bookmark.url ? { name: newName, url: newUrl, category: newCategory } : b)
-                );
-                await saveBookmarks(updatedBookmarks);
-
-                nameSpan.textContent = `${index}. ${newName}`;
-                category.textContent = newCategory;
-                openLink.href = newUrl;
-
-                // Close modal after saving
-                document.body.removeChild(modal);
-            }
+    // Only show the delete and edit buttons if the logged-in user is 'admin'
+    if (loggedInUsername === "admin") {
+        // Delete button
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = '⚔️';
+        deleteButton.className = 'delete-button';
+        deleteButton.onclick = async function() {
+            const bookmarks = await getBookmarks();
+            const updatedBookmarks = bookmarks.filter(b => b.url !== bookmark.url);
+            await saveBookmarks(updatedBookmarks);
+            bookmarkList.removeChild(listItem);
         };
 
-        // Close button for modal
-        const closeButton = document.createElement('button');
-        closeButton.textContent = 'Cancel';
-        closeButton.onclick = function() {
-            document.body.removeChild(modal); // Close the modal without saving
+        // Edit button to open modal
+        const editButton = document.createElement('button');
+        editButton.textContent = '✏️';
+        editButton.className = 'edit-button';
+        editButton.onclick = function() {
+            // Create the modal container
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            
+            // Create modal content
+            const modalContent = document.createElement('div');
+            modalContent.className = 'modal-content';
+            
+            // Name input
+            const nameInput = document.createElement('input');
+            nameInput.type = 'text';
+            nameInput.value = bookmark.name;
+            nameInput.placeholder = 'Edit bookmark name';
+
+            // URL input
+            const urlInput = document.createElement('input');
+            urlInput.type = 'url';
+            urlInput.value = bookmark.url;
+            urlInput.placeholder = 'Edit bookmark URL';
+
+            // Category dropdown
+            const categories = [
+                "Tawheed", "Adl", "Nabuwat", "Imamat", "Maad", "Mahdaviyat", "Tafseer e Quran",
+                "Ahqaam", "Dua", "Akhkaq", "Munazera", "Wilayat", "History", "Islamic Audio",
+                "Islamic Video", "Biography", "Raja't", "Articles", "Shia Books", "Manaqib e Ahlebait", "Hadees", "General"
+            ];
+            const select = document.createElement('select');
+            categories.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option;
+                optionElement.textContent = option;
+                select.appendChild(optionElement);
+            });
+            select.value = bookmark.category;
+
+            // Submit button
+            const submitButton = document.createElement('button');
+            submitButton.textContent = 'Save';
+            submitButton.onclick = async function() {
+                const newName = nameInput.value;
+                const newUrl = urlInput.value;
+                const newCategory = select.value;
+
+                if (newName && newUrl && newCategory) {
+                    const bookmarks = await getBookmarks();
+                    const updatedBookmarks = bookmarks.map(b => 
+                        (b.url === bookmark.url ? { name: newName, url: newUrl, category: newCategory } : b)
+                    );
+                    await saveBookmarks(updatedBookmarks);
+
+                    nameSpan.textContent = `${index}. ${newName}`;
+                    category.textContent = newCategory;
+                    openLink.href = newUrl;
+
+                    // Close modal after saving
+                    document.body.removeChild(modal);
+                }
+            };
+
+            // Close button for modal
+            const closeButton = document.createElement('button');
+            closeButton.textContent = 'Cancel';
+            closeButton.onclick = function() {
+                document.body.removeChild(modal); // Close the modal without saving
+            };
+
+            // Append elements to modal content
+            modalContent.appendChild(nameInput);
+            modalContent.appendChild(urlInput);
+            modalContent.appendChild(select);
+            modalContent.appendChild(submitButton);
+            modalContent.appendChild(closeButton);
+
+            // Append modal content to modal
+            modal.appendChild(modalContent);
+
+            // Append modal to the body
+            document.body.appendChild(modal);
         };
 
-        // Append elements to modal content
-        modalContent.appendChild(nameInput);
-        modalContent.appendChild(urlInput);
-        modalContent.appendChild(select);
-        modalContent.appendChild(submitButton);
-        modalContent.appendChild(closeButton);
+        // Append delete and edit buttons to the button container
+        buttonContainer.appendChild(editButton);
+        buttonContainer.appendChild(deleteButton);
+    }
 
-        // Append modal content to modal
-        modal.appendChild(modalContent);
-
-        // Append modal to the body
-        document.body.appendChild(modal);
-    };
-
-    // Append buttons to the button container
+    // Append the open link and copy buttons
     buttonContainer.appendChild(openLink);
-    buttonContainer.appendChild(editButton);
     buttonContainer.appendChild(copyButton);
-    buttonContainer.appendChild(deleteButton);
 
     // Append elements to listItem
     listItem.appendChild(category); // Append the category
