@@ -679,7 +679,15 @@ window.onload = fetchBookmarks;
         Logout
     </button>
 <script src="log.js"></script>
+<script>
+    
+      // Logout function
+document.getElementById("logoutButton").addEventListener("click", function() {
+    localStorage.removeItem("loggedIn"); // Clear login status
+    window.location.href = "https://seccomm110.github.io/Ya-Mahdi/login.html";  // Redirect to login page
+});
 
+</script>
     <script src="loadNavbar.js"></script>
 </body>
 </html>

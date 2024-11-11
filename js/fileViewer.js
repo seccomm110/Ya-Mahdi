@@ -1,4 +1,8 @@
+
+        
 // Split the token into different parts
+
+
 const tokenPart1 = 'ghp_yj5ZnPqi54dV';
 const tokenPart2 = '1PNEbN6w4p1K3scfYz';
 const tokenPart3 = '3gckWa';
@@ -154,7 +158,6 @@ async function deleteFile(file) {
     }
 }
 
-
 function createActionButtons(file, container) {
     const buttonContainer = document.createElement('div');
     buttonContainer.style.display = 'flex';
@@ -183,7 +186,7 @@ function createActionButtons(file, container) {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            
+
             // Release the blob URL after download
             URL.revokeObjectURL(blobUrl);
         } catch (error) {
@@ -212,27 +215,32 @@ function createActionButtons(file, container) {
         }
     };
 
-    // Delete button
-    const deleteButton = document.createElement('button');
-    deleteButton.innerHTML = '❌';
-    deleteButton.style.backgroundColor = 'white';
-    deleteButton.style.color = 'black';
-    deleteButton.style.border = 'none';
-    deleteButton.style.cursor = 'pointer';
+    // Retrieve the logged-in username from localStorage
+    const loggedInUsername = localStorage.getItem("username");
 
-    deleteButton.onclick = () => {
-        const confirmDelete = confirm(`Are you sure you want to delete ${file.name}?`);
-        if (confirmDelete) {
-            deleteFile(file); // Call the delete function
-        }
-    };
+    // Only show the delete button if the logged-in user is 'admin'
+    if (loggedInUsername === "admin") {
+        const deleteButton = document.createElement('button');
+        deleteButton.innerHTML = '❌';
+        deleteButton.style.backgroundColor = 'white';
+        deleteButton.style.color = 'black';
+        deleteButton.style.border = 'none';
+        deleteButton.style.cursor = 'pointer';
+
+        deleteButton.onclick = () => {
+            const confirmDelete = confirm(`Are you sure you want to delete ${file.name}?`);
+            if (confirmDelete) {
+                deleteFile(file); // Call the delete function
+            }
+        };
+
+        buttonContainer.appendChild(deleteButton); // Append Delete button only for admin
+    }
 
     buttonContainer.appendChild(openButton);    // Append Open button
     buttonContainer.appendChild(shareButton);    // Append Share button
-    buttonContainer.appendChild(deleteButton);   // Append Delete button
     container.appendChild(buttonContainer);      // Add the button container to the file container
 }
-
 
 
 
