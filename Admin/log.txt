@@ -190,3 +190,4 @@
 [11/11/2024 6:38:30 PM] [admin] [Ya Mahdi]
 [11/11/2024 6:38:37 PM] [admin] [Attendance]
 [11/11/2024 6:39:01 PM] [admin] [Attendance]
+[11/11/2024 6:39:12 PM] [admin] [Class Details]
