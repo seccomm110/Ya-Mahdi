@@ -588,10 +588,12 @@ function addBookmarkToList(bookmark) {
 
             // Category dropdown
             const categories = [
-                "Tawheed", "Adl", "Nabuwat", "Imamat", "Maad", "Mahdaviyat", "Tafseer e Quran",
-                "Ahqaam", "Dua", "Akhkaq", "Munazera", "Wilayat", "History", "Islamic Audio",
-                "Islamic Video", "Biography", "Raja't", "Articles", "Shia Books", "Manaqib e Ahlebait", "Hadees", "General"
-            ];
+    "Adl", "Ahqaam", "Akhkaq", "Articles", "Biography", "Dua", "General", "Hadees",
+    "History", "Imamat", "Islamic Audio", "Islamic Video", "Maad", "Mahdaviyat",
+    "Manaqib e Ahlebait", "Munazera", "Nabuwat", "Raja't", "Shia Books", "Tafseer e Quran",
+    "Tawheed", "Wilayat"
+]
+
             const select = document.createElement('select');
             categories.forEach(option => {
                 const optionElement = document.createElement('option');

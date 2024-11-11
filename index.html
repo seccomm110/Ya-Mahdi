@@ -144,6 +144,20 @@
     
     <div class="left">
         <div id="navbar-placeholder"></div>
+        <p>Welcome, <span id="username-display"></span>!</p>
+        <script>
+            // Check if 'username' exists in localStorage
+            const username = localStorage.getItem("username");
+            
+            // If username is found, display it in the element with id 'username-display'
+            if (username) {
+              document.getElementById("username-display").textContent = username;
+            } else {
+              // Optionally handle if there's no username in localStorage
+              console.log("Username not found in localStorage.");
+            }
+          </script>
+          
         <div style="margin-top: 20px; display: flex; align-items: center;">
             <input type="text" id="searchButton" placeholder="Search Files" 
                    style="padding: 10px; border: 1px solid #007bff; border-radius: 5px; flex: 1;"/>
