@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +8,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Weblink</title>
     <style>
-       /* Modal Styles */
+
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+        /* Hide category dropdown and category display for smaller screens */
+        .categoryInput, 
+        .c,
+        .bookmark-category {
+            display: none;
+        }
+
+
+        input[type="text"] {
+            width: 90%; /* Increase width for smaller screens */
+            margin: 0 auto; /* Center align */
+            margin-bottom: 10px; /* Space below */
+        }
+
+        #linkForm {
+            flex-direction: column; /* Stack inputs vertically */
+            align-items: center; /* Center align the form */
+        }
+
+        input[type="submit"] {
+            width: 100%; /* Full width on smaller screens */
+            margin-top: 10px; /* Space above */
+        }
+    }
+
 .modal {
     position: fixed;
     top: 0;
@@ -189,7 +218,7 @@ ul li:hover {
     }
 
     .button-container {
-        flex-direction: column; /* Stack buttons vertically on very small screens */
+        /* flex-direction: column; Stack buttons vertically on very small screens */
         align-items: center; /* Center align buttons */
     }
 
@@ -239,7 +268,7 @@ ul li:hover {
 }
 
 .bookmark-name {
-    max-width: 600px;
+    max-width: 50%;
     overflow-wrap: break-word;
     word-break: break-word;
     white-space: normal;
@@ -361,7 +390,7 @@ ul li:hover {
 </div>
     
 <div style="display: flex;">
-    <h3><span style="margin-left:10px;margin-right: 213px;">Category</span> Topic</h3>
+    <h3><span style="margin-left:10px;margin-right: 213px;" class="c">Category</span> Topic</h3>
   </div>
   <!-- <hr style="height: 3px; border: none; background-color: #ff8c00; max-width: 90%;"> -->
 
