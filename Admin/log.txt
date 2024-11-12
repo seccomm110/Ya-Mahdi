@@ -7,3 +7,4 @@
 [12/11/2024 21:09:57] [admin] [Ya Mahdi]
 [12/11/2024 21:11:48] [murtuza] [Ya Mahdi]
 [12/11/2024 21:12:02] [murtuza] [Attendance]
+[12/11/2024 21:12:18] [murtuza] [Class Details]
