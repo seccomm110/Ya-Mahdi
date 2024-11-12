@@ -9,3 +9,4 @@
 [11/12/2024 10:00:56 AM] [admin] [Upload Files]
 [11/12/2024 10:01:10 AM] [admin] [Attendance]
 [11/12/2024 10:01:18 AM] [admin] [Ya Mahdi]
+[11/12/2024 10:01:25 AM] [admin] [Events]
