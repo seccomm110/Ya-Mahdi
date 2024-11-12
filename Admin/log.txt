@@ -12,3 +12,4 @@
 [12/11/2024 12:47:48] [null] [My Weblink]
 [12/11/2024 12:47:53] [null] [Ya Mahdi]
 [12/11/2024 12:48:00] [null] [Attendance]
+[12/11/2024 12:48:13] [null] [Class Details]
