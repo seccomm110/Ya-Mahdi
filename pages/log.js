@@ -75,5 +75,3 @@ if (localStorage.getItem("loggedIn")) {
     // Redirect to login page if not logged in
     window.location.href = "login.html";
 }
-
-

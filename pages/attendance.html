@@ -4,8 +4,7 @@
     
     <link rel="stylesheet" href="style.css">
     <link sizes="64x64" rel="icon" href="../imgs/logo.png" type="image/png">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-
+    
     <link rel="stylesheet" href="a.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -54,19 +53,7 @@
     <button id="logoutButton" style="position: fixed; bottom: 20px; left: 20px; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
         Logout
     </button>
-    <script>
-        // Check if the user is admin
-        window.onload = function() {
-          // Debugging: Check if username exists in localStorage
-          console.log("Username in localStorage: ", localStorage.getItem('username'));
-    
-          if (localStorage.getItem('username') === 'admin') {
-              // Show the admin and upload icon if the user is admin
-              document.getElementById('admin-link').style.display = 'block';
-              // document.getElementById('upload-icon').style.display = 'block';
-          }
-      }
-    </script>
+
     <script src="loadNavbar.js"></script>
     <script src="log.js"></script>
 

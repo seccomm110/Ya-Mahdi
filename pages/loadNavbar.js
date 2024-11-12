@@ -3,8 +3,8 @@ function loadNavbar() {
   const xhr = new XMLHttpRequest();
 
   // Check if the current page is in a subdirectory
-  const pathPrefix = window.location.pathname.includes('/pages/') ? '../' : '';
-  xhr.open('GET', `${pathPrefix}pages/navbar.html`, true);
+  const pathPrefix = window.location.pathname.includes('/') ? '../' : '';
+  xhr.open('GET', `${pathPrefix}navbar.html`, true);
 
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
