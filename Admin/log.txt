@@ -41,3 +41,4 @@
 [11/12/2024 9:44:39 PM] [admin] [Events]
 [11/12/2024 9:45:03 PM] [admin] [Minutes Of Meeting]
 [11/12/2024 9:45:40 PM] [admin] [Minutes Of Meeting]
+[11/12/2024 9:45:51 PM] [admin] [Article]
