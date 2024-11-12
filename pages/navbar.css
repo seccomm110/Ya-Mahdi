@@ -352,9 +352,7 @@ th {
         transform: translateX(0); /* Show sidebar when open */
     }
 
-    .sidebar-toggle {
-        position: absolute; /* Make toggle button absolute for smaller screens */
-    }
+
 
     .sidebar ul li {
         text-align: center; /* Center align text */
