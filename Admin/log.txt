@@ -39,3 +39,4 @@
 [11/12/2024 9:40:35 PM] [admin] [Ya Mahdi]
 [11/12/2024 9:41:22 PM] [admin] [My Weblink]
 [11/12/2024 9:44:39 PM] [admin] [Events]
+[11/12/2024 9:45:03 PM] [admin] [Minutes Of Meeting]
