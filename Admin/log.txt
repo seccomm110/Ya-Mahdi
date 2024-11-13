@@ -54,3 +54,4 @@
 [11/13/2024 10:49:14 PM] [admin] [Ya Mahdi]
 [11/13/2024 10:49:22 PM] [admin] [Class Details]
 [11/13/2024 10:49:31 PM] [admin] [Upload Files]
+[11/13/2024 10:50:01 PM] [admin] [Attendance]
