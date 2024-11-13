@@ -56,3 +56,4 @@
 [11/13/2024 10:49:31 PM] [admin] [Upload Files]
 [11/13/2024 10:50:01 PM] [admin] [Attendance]
 [11/13/2024 10:50:46 PM] [admin] [Upload Files]
+[11/13/2024 10:51:09 PM] [admin] [Class Details]
