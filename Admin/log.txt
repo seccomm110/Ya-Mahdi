@@ -25,3 +25,4 @@
 [11/29/2024 9:26:10 AM] [admin] [Ya Mahdi]
 [11/29/2024 9:26:18 AM] [admin] [Attendance]
 [11/29/2024 9:26:33 AM] [admin] [Upload Files]
+[11/29/2024 9:26:55 AM] [admin] [Minutes Of Meeting]
