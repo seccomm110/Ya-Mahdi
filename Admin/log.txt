@@ -14,3 +14,4 @@
 [12/30/2024 9:20:25 PM] [admin] [Ya Mahdi]
 [12/30/2024 10:41:06 PM] [admin] [Ya Mahdi]
 [12/30/2024 10:41:17 PM] [admin] [Class Details]
+[12/30/2024 10:46:27 PM] [null] [Class Details]
